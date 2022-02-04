@@ -1,3 +1,8 @@
+//added below, library inclusion
+library ieee;
+using ieee.std_logic_1164.all;
+
+
 module Mux2_1(in1, in2, read, ouput);
 		 input in1, in2, read
 		 output ouput

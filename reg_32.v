@@ -2,15 +2,6 @@
 library ieee;
 using ieee.std_logic_1164.all;
 
-
-module Mux2_1(in1, in2, read, ouput);
-		 input in1, in2, read
-		 output ouput
-		 assign ouput = select ? in1: in2;
-		 
-endmodule :Mux2_1;
-
-
 module datapath (clk, ctr, data);
 	input clk, ctr
 	input data
@@ -60,8 +51,27 @@ module datapath (clk, ctr, data);
 						BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0);
 						
 						
+endmodule
+
+module MDR (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
+	input clr, clk, enable, read
+	input [31:0] Mdatain, BusMuxOut
+	output [31:0] MDRout
+
+	wire [31:0] MDRin;
+	Mux2_1 MDMux (Mdatain, BusMuxOut, read, MDRin);
+	Reg32 regMDR (clr, clk, enable, MDRin, MDRout);	
 
 endmodule
+
+
+
+module Mux2_1(in1, in2, read, ouput);
+		 input in1, in2, read
+		 output ouput
+		 assign ouput = select ? in1: in2;
+endmodule
+
 
 module Mux32_1(
     output [31:0] mux_out

@@ -1,3 +1,11 @@
+module Mux2_1(in1, in2, read, ouput);
+		 input in1, in2, read
+		 output ouput
+		 assign ouput = select ? in1: in2;
+		 
+endmodule :Mux2_1;
+
+
 module datapath (clk, ctr, data);
 	input clk, ctr
 	input data

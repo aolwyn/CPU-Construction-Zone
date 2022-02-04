@@ -27,7 +27,8 @@ module datapath (clk, ctr, data);
 	Reg32 PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
-	Reg32 Z(clr,clk,Zin,BusMuxOut,BusMuxIn_Z);
+	Reg32 Z_HI(clr,clk,ZHiin,BusMuxOut,BusMuxIn_ZHI);
+	Reg32 Z_Lo(clr,clk,ZLOin,BusMuxOut,BusMuxIn_ZLO);
 	Reg32 MAR(clr,clk,MARin,BusMuxOut,BusMuxIn_MAR);
 	Reg32 HI(clr,clk,HIin,BusMuxOut,BusMuxIn_HI);
 	Reg32 LO(clr,clk,LOin,BusMuxOut,BusMuxIn_Lo);
@@ -36,13 +37,21 @@ module datapath (clk, ctr, data);
 	//encoder
 	wire [4:0] encoderOut;
 	wire [31:0] encoderIn;
-	Encoder32_5 regEncoder(output reg[4:0] SOut, input[31:0] Data);
+	Encoder32_5 regEncoder(encoderOut, encoderIn);
 	
+	//mux
+	wire [31:0] mux_out;
+	wire [31:0] C_sign_extend,BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_Lo, BusMuxIn_HI, BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
+						
+	Mux32_1 regMux(mux_out,0,0,0,0,0,0,0,0,0,C_sign_extend,BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_Lo, BusMuxIn_HI,
+						BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0);
+						
+						
 
 endmodule
 
 module Mux32_1(
-    output [31:0] mux_out,T
+    output [31:0] mux_out
     input [31:0] data_31, data_30,data_29, data_28, data_27, data_26, data_25, data_24, data_23, data_22, data_21, data_20, data_19, data_18, data_17, data_16, data_15, data_14, data_13, data_12, data_11, data_10, data_9, data_8, data_7, data_6, data_5, data_4, data_3, data_2, data_1, data_0,
     input [4 :0] select,
     input enable

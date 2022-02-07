@@ -8,7 +8,7 @@ initial begin
 always @ (*) begin
 	msb = inB[31];
 	temp = temp <<1;
-	LogialOr(temp, temp, inB);
+	logialOr(temp, temp, inB);
 
 	end
 

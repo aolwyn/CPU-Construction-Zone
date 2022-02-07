@@ -2,10 +2,10 @@
 library ieee;
 using ieee.std_logic_1164.all;
 
-module datapath (clk, ctr, data);
-	input clk, ctr
-	input data
-	//output??
+module datapath (clk, clr, data, D);
+	input clk, clr;
+	input data;
+	output [31:0] D;
 
 	wire [31:0] BusMuxOut;
 	
@@ -36,6 +36,7 @@ module datapath (clk, ctr, data);
 	Reg32 MAR(clr,clk,MARin,BusMuxOut,BusMuxIn_MAR);
 	Reg32 HI(clr,clk,HIin,BusMuxOut,BusMuxIn_HI);
 	Reg32 LO(clr,clk,LOin,BusMuxOut,BusMuxIn_Lo);
+	MDRreg MDR(clr, clk, enable, Mdatain, BusMuxOut, MDRread, MDRout);
 	
 	
 	//encoder
@@ -53,72 +54,16 @@ module datapath (clk, ctr, data);
 						
 endmodule
 
-module MDR (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
-	input clr, clk, enable, read
-	input [31:0] Mdatain, BusMuxOut
-	output [31:0] MDRout
+module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
+	input clr, clk, enable, read;
+	input [31:0] Mdatain, BusMuxOut;
+	output [31:0] MDRout;
 
 	wire [31:0] MDRin;
 	Mux2_1 MDMux (Mdatain, BusMuxOut, read, MDRin);
 	Reg32 regMDR (clr, clk, enable, MDRin, MDRout);	
 
 endmodule
-
-
-
-module Mux2_1(in1, in2, read, ouput);
-		 input in1, in2, read
-		 output ouput
-		 assign ouput = select ? in1: in2;
-endmodule
-
-
-module Mux32_1(
-    output [31:0] mux_out
-    input [31:0] data_31, data_30,data_29, data_28, data_27, data_26, data_25, data_24, data_23, data_22, data_21, data_20, data_19, data_18, data_17, data_16, data_15, data_14, data_13, data_12, data_11, data_10, data_9, data_8, data_7, data_6, data_5, data_4, data_3, data_2, data_1, data_0,
-    input [4 :0] select,
-    input enable
-);
-    reg [31:0] mux_int;
-    assign mux_out = enable ? mux_int: 32'bz;
-    always @ (data_31, data_30,data_29, data_28, data_27, data_26, data_25, data_24, data_23, data_22, data_21, data_20, data_19, data_18, data_17, data_16, data_15, data_14, data_13, data_12, data_11, data_10, data_9, data_8, data_7, data_6, data_5, data_4, data_3, data_2, data_1, data_0, select )
-        case(select)
-         0:     		  mux_int = data_0;
-         1:            mux_int = data_1;        
-         2:            mux_int = data_2;
-         3:            mux_int = data_3;
-         4:            mux_int = data_4;
-         5:            mux_int = data_5;
-         6:            mux_int = data_6;
-         7:            mux_int = data_7;
-         8:            mux_int = data_8;
-         9:            mux_int = data_9;
-         10:            mux_int = data_10;
-         11:            mux_int = data_11;
-         12:            mux_int = data_12;
-         13:            mux_int = data_13;
-         14:            mux_int = data_14;
-         15:            mux_int = data_15;
-         16:            mux_int = data_16;
-         17:            mux_int = data_17;
-         18:            mux_int = data_18;
-         19:            mux_int = data_19;
-         20:            mux_int = data_20;
-         21:            mux_int = data_21;
-         22:            mux_int = data_22;
-         23:            mux_int = data_23;
-         24:            mux_int = data_24;
-         25:            mux_int = data_25;
-         26:            mux_int = data_26;
-         27:            mux_int = data_27;
-         28:            mux_int = data_28;
-         29:            mux_int = data_29;
-         30:            mux_int = data_30;
-         31:            mux_int = data_31;
-         default:    mux_int = 32'bx;
-        endcase
-endmodule
-
 
 module Encoder32_5(output reg[4:0] SOut, input[31:0] Data);
 aways @(Data)

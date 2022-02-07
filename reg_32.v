@@ -65,41 +65,21 @@ module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 
 endmodule
 
-module Encoder32_5(output reg[4:0] SOut, input[31:0] Data);
-aways @(Data)
-		case (Data)
-			32'h00000001 : SOut = 0; 
-			32'h00000002 : SOut = 1;
-			32'h00000004 : SOut = 2;
-			32'h00000008 : SOut = 3;
-			32'h00000010 : SOut = 4;
-			32'h00000020 : SOut = 5;
-			32'h00000040 : SOut = 6;
-			32'h00000080 : SOut = 7;
-			32'h00000100 : SOut = 8;
-			32'h00000200 : SOut = 9;
-			32'h00000400 : SOut = 10;
-			32'h00000800 : SOut = 11;
-			32'h00001000 : SOut = 12;
-			32'h00002000 : SOut = 13;
-			32'h00004000 : SOut = 14;
-			32'h00008000 : SOut = 15;
-			32'h00010000 : SOut = 16;
-			32'h00020000 : SOut = 17;
-			32'h00040000 : SOut = 18;
-			32'h00080000 : SOut = 19;
-			32'h00100000 : SOut = 20;
-			32'h00200000 : SOut = 21;
-			32'h00400000 : SOut = 22;
-			32'h00800000 : SOut = 23;
-				default	 : SOut = 31;	//11111 means no acceptable input
-		endcase
-endmodule
-		
-
-module Reg32(
-	input clr, clk, enable, 
-	input [31:0] D, 
-	output [31:0] Q
+module reg_32(
+	input wire clr, clk, enable, 
+	input wire [31:0] D, 
+	output reg [31:0] Q
 );
+	parameter Q_INIT= 0;
+	initial Q = Q_INIT;				//initalize register value to 0
+
+	always@(posedge clk)
+	begin
+		if (clr) begin				//if clr is 1, set to 0
+			Q[31:0] = 32'b0;
+		end
+		else if(enable) begin		//if enable is 1 and clr is 0, Q=D
+			Q[31:0} = D[31:0]
+		end
+	end
 endmodule

@@ -1,2 +1,2 @@
 # CPU-Construction-Zone
-CPU Construction Zone In VHDL :)
+CPU Construction Zone In Verilog :)

@@ -38,11 +38,10 @@ module datapath (clk, clr, data, D);
 	Reg32 LO(clr,clk,LOin,BusMuxOut,BusMuxIn_Lo);
 	MDRreg MDR(clr, clk, enable, Mdatain, BusMuxOut, MDRread, MDRout);
 	
-	
 	//encoder
 	wire [4:0] encoderOut;
 	wire [31:0] encoderIn;
-	Encoder32_5 regEncoder(encoderOut, encoderIn);
+	Encoder32_5 regEncoder(encoderIn, encoderOut);
 	
 	//mux
 	wire [31:0] mux_out;
@@ -64,7 +63,7 @@ module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 	Reg32 regMDR (clr, clk, enable, MDRin, MDRout);	
 
 endmodule
-
+\
 module reg_32(
 	input wire clr, clk, enable, 
 	input wire [31:0] D, 

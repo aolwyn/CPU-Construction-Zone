@@ -1,12 +1,10 @@
 
 module multiplier(
-output reg [63:0] product, //product = a ?
-input [31:0] m, q
+input [31:0] m, q,
+output reg [63:0] product //product = a ?
 
 //let m = multiplier, q = multiplicand
-
 );
-
 	reg [32:0] extended = (m,0);
 	reg [63:0] currVal;
 	reg [63:0] cumSum;

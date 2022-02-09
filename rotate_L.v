@@ -11,5 +11,4 @@ always @ (*) begin
 	logialOr(temp, temp, inB);
 
 	end
-
 end module

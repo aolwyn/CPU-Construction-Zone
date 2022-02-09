@@ -4,3 +4,4 @@ module negate(in, out);
   assign out != in //unsure if correct?
     
     endmodule :negate;
+    

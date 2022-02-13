@@ -1,15 +1,24 @@
 
+module datapath(
+	input PCout, ZHighout, ZLowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,
+            AND, R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+            R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin;
+	output [31:0] BusMuxOut
 
-module datapath(			
+/*  //Final inputs for datapath 
 	input clk, clr, stop,
 	//input wire[31:0] InPort_input,	//for later
 	//output wire[31:0] OutPort_output,		//for later
 	output [31:0] BusMuxOut,
 	output [4:0] operation
+*/
 );
+
+	/*	//commented out for early testing
 	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
 			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
 			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
+	*/
 		
 	wire [15:0] R_enableIn;					//from the CPU
 	wire [15:0] enableR_IR;					//output from select_enable logic
@@ -111,11 +120,12 @@ module datapath(
 		.B_reg(BusMuxOut),
 		.Y_reg(BusMuxIn_Y),
 		.opcode(operation),
-		.branch_flag(con_out),			//??????????
+		.brn_flag(con_out),			//??????????
 		.IncPC(IncPC),
 		.C_reg(C_data_out)                              
 	);			
 
 
+	//instantiate the control unit here
 
 endmodule

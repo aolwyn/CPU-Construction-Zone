@@ -1,7 +1,8 @@
-module negate(in, out);
-  input in;
-  output out;
-  assign out != in; //unsure if correct?
+`timescale 1ns / 1ps
+
+module negate(output out[31:0], input in[31:0]);
+
+  assign out = ~in+1; 
     
-    endmodule :negate;
+endmodule 
     

@@ -1,7 +1,7 @@
 
 module datapath(
-	input PCout, ZHighout, ZLowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,
-    input [4:0] operation, 
+	input PCout, ZHighout, ZLowout, MDR_out, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,
+   input [4:0] operation, 
 	input	R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
             R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin,
 	output [31:0] BusMuxOut
@@ -32,7 +32,7 @@ module datapath(
 		always@(*)begin		
 			if (enableR_IR)enableReg<=enableR_IR; 
 			else enableReg<=R_enableIn;
-			if (Rout_IR)Rout<=Rout_IR; 
+			if (RegOut_IR)Rout<=RegOut_IR; 
 			else Rout<=16'b0;	
 		end 
 	
@@ -81,7 +81,7 @@ module datapath(
 	
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order
-	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
+	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDR_out,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
 
 						
 	mux_32_1 busMux(
@@ -110,20 +110,20 @@ module datapath(
 			.BusMuxIn_InPort(BusMuxIn_InPort),
 			.C_sign_extended(C_sign_extend),
 			.BusMuxOut(BusMuxOut),
-			.select_signal(bus_signal)
+			.select(bus_signal)
 			);
 					
 	//instantiate alu
 	alu the_alu(
 		.clk(clk),
 		.clear(clr), 
-		.A_reg(BusMuxOut),
-		.B_reg(BusMuxOut),
-		.Y_reg(BusMuxIn_Y),
+		.RA(BusMuxOut),
+		.RB(BusMuxOut),
+		.RY(BusMuxIn_Y),
 		.opcode(operation),
 		.brn_flag(con_out),			//??????????
-		.IncPC(IncPC),
-		.C_reg(C_data_out)                              
+		.incPC(IncPC),
+		.RC(C_data_out)                              
 	);			
 
 

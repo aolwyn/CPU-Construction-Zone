@@ -4,7 +4,7 @@ module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 	output [31:0] MDRout;
 
 	wire [31:0] MDRin;
-	Mux2_1 MDMux (Mdatain, BusMuxOut, read, MDRin);
+	mux_2_1 MDMux (Mdatain, BusMuxOut, read, MDRin);
 	Reg32 regMDR (clr, clk, enable, MDRin, MDRout);	
 
 endmodule
@@ -23,7 +23,7 @@ module Reg32(
 			Q[31:0] = 32'b0;
 		end
 		else if(enable) begin		//if enable is 1 and clr is 0, Q=D
-			Q[31:0} = D[31:0]
+			Q[31:0] = D[31:0];
 		end
 	end
 endmodule

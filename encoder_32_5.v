@@ -31,7 +31,7 @@ module encoder_32_5(
 			32'h00200000 : encOut <= 21;
 			32'h00400000 : encOut <= 22;
 			32'h00800000 : encOut <= 23;
-				default	 : encOut <= 5'b31;	//11111 means no acceptable input
+				default	 : encOut <= 5'd31;	//11111 means no acceptable input
 		endcase
 	end
 endmodule

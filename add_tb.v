@@ -18,8 +18,8 @@ reg	[3:0] Present_state= Default;
 initial Clear = 0;
 
 datapath DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
- ADD, R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
- R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin);
+			ADD, R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+			R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin, BusMuxOut);
 // add test logic here
 
 initial 

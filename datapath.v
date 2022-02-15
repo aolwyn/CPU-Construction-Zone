@@ -1,8 +1,9 @@
 
 module datapath(
 	input PCout, ZHighout, ZLowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,
-            AND, R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
-            R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin;
+    input [4:0] operation, 
+	input	R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+            R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin,
 	output [31:0] BusMuxOut
 
 /*  //Final inputs for datapath 

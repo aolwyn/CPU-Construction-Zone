@@ -3,8 +3,10 @@
 module datapath_tb;       
     reg  PCout, Zlowout, MDRout, R2out, R4out;           // add any other signals to see in your simulation 
     reg  MARin, Zin, PCin, MDRin, IRin, Yin;    
-    reg  IncPC, Read, AND, R5in, R2in, R4in; 
-    reg  Clock; 
+    reg  IncPC, Read; 
+    reg  [4:0] AND;
+    reg  R5in, R2in, R4in; 
+    reg  Clock, Clear; 
     reg  [31:0] Mdatain; 
 
     parameter Default = 4’b0000, Reg_load1a = 4’b0001, Reg_load1b = 4’b0010, Reg_load2a = 4’b0011,  
@@ -14,7 +16,7 @@ module datapath_tb;
  
 //datapath DUT(clock, Clear, stop, bus_contents, operation);\
 datapath DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
-            AND,R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+            AND, R5in, R2in, R4in, Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
             R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin, BusMuxOut);
 
 // add test logic here 
@@ -95,7 +97,7 @@ begin
               R2out <= 1; Yin <= 1;    
         end 
         T4: begin 
-              R4out <= 1; AND <= 1; Zin <= 1;    
+              R4out <= 1; AND <= 5'b01001; Zin <= 1;    
         end 
         T5: begin 
               Zlowout <= 1; R5in <= 1;    

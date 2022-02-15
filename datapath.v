@@ -30,10 +30,15 @@ module datapath(
 
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin		
+			enableReg[2] <= R2in;
+			enableReg[4] <= R4in;
+			enableReg[5] <= R5in;
+			/*
 			if (enableR_IR)enableReg<=enableR_IR; 
 			else enableReg<=R_enableIn;
 			if (RegOut_IR)Rout<=RegOut_IR; 
 			else Rout<=16'b0;	
+			*/
 		end 
 	
 	//make wires for reg outputs
@@ -70,7 +75,7 @@ module datapath(
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
 	//select_encode_logic IRlogic(...);
 
-	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, MDRread, MDRout);
+	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, MDRout);
 
 	//input and output port will be added here
 	//conff logic may be added here 

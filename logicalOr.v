@@ -1,6 +1,7 @@
-module logicalOr(in1, in2, out);
-input in1, in2
-output out
-assign out = in1 || in2
+`timescale 1ns / 1ps
 
-endmodule :logicalOr;
+module logicalOr(output out[31:0], input in2[31:0], in1[31:0]);
+
+assign out = in1 | in2
+
+endmodule

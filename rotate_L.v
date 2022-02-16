@@ -15,9 +15,9 @@ end module
 	/* below is corrected version, pending check
 `timescale 1ns / 1ps
 
-module rotateLeft(output out[31:0], input in[31:0])
+module rotateLeft(output out[31:0], input in[31:0]);
 
-assign out = {in[0],in[31:1]}
+assign out = {in[0],in[31:1]};
 
 
 endmodule    

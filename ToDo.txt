@@ -1,6 +1,7 @@
 
 TO DO:
 	- change divide to be more complicated
+	- fix multiply 
 	- write shift L <-- DONE
 	- write shift R <-- DONE
 	- check that all operations are complete

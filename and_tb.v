@@ -6,10 +6,10 @@ module and_tb;
 	reg IncPC, Read;
 	reg	[4:0] AND; 
 	reg	R5in, R2in, R4in;
-	reg R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg	HIin, LOin, ZHighIn, Cin, ZLowIn;
 	reg	Clock, Clear;
 	reg	[31:0] Mdatain;
+    reg branch_flag;
 
     parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011,  
                              Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111,  
@@ -18,8 +18,7 @@ module and_tb;
  
 //datapath DUT(clock, Clear, stop, bus_contents, operation);\
 datapath DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
-            AND, R5in, R2in, R4in, Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
-            R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin, BusMuxOut);
+            AND, R5in, R2in, R4in, Clock, Mdatain, Clear, HIin, LOin, ZHighIn, ZLowIn, Cin, branch_flag);
 
 // add test logic here 
 initial  
@@ -53,7 +52,7 @@ begin
               		PCout <= 0;   Zlowout <= 0; ZHighout <= 0;  MDRout<= 0;   //initialize the signals
 						R2out <= 0;   R4out <= 0;   MARin <= 0;   ZLowIn <= 0;  
 						PCin <=0;   MDRin <= 0;   IRin  <= 0;   Yin <= 0;  
-						IncPC <= 0;   Read <= 0;   AND <= 0;
+						IncPC <= 0;   Read <= 0;   AND <= 0;    branch_flag <=0;
 						R5in <= 0; R2in <= 0; R4in <= 0; Mdatain <= 32'h00000000;
         end 
         Reg_load1a: begin   

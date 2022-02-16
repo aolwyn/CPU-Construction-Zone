@@ -1,10 +1,9 @@
 
 module datapath(
-	input PCout, ZHighout, ZLowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
+	input PCout, ZHighout, ZLowout, HIout, LOout, InPortout, Cout,
+	input MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
 	input [4:0] operation, 
-	input R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
-          R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin,
-	output [31:0] BusMuxOut
+	input R5in, R2in, R4in, clk, Mdatain, clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
 
 /*  //Final inputs for datapath 
 	input clk, clr, stop,
@@ -20,19 +19,28 @@ module datapath(
 			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
 			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
 	*/
-		
-	wire [15:0] R_enableIn;					//from the CPU
-	wire [15:0] enableR_IR;					//output from select_enable logic
-	wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic
+
+	//wire [15:0] R_enableIn;					//from the CPU
+	//wire [15:0] enableR_IR;					//output from select_enable logic
+	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic
 	reg  [15:0] enableReg;					//chooses the register to enable
 	reg  [15:0] Rout;						//chooses which register to read from
-	wire [3:0]  decoder_in;
+	//wire [3:0]  decoder_in;
+
+
+	initial begin
+		Rout = 16'b0;
+		enableReg = 16'b0;
+	end
 
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin		
 			enableReg[2] <= R2in;
 			enableReg[4] <= R4in;
 			enableReg[5] <= R5in;
+
+			Rout[13] <= R2out;
+			Rout[14] <= R4out;
 			/*
 			if (enableR_IR)enableReg<=enableR_IR; 
 			else enableReg<=R_enableIn;
@@ -40,11 +48,12 @@ module datapath(
 			else Rout<=16'b0;	
 			*/
 		end 
-	
+
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
 	wire [31:0] bus_signal, C_data_out;
+	wire [31:0] BusMuxOut;
 
 	//registers 0-15
 	Reg32 r0(clr,clk,enableReg[0],BusMuxOut,BusMuxIn_R0);
@@ -115,7 +124,7 @@ module datapath(
 			.BusMuxIn_InPort(BusMuxIn_InPort),
 			.C_sign_extended(C_sign_extend),
 			.BusMuxOut(BusMuxOut),
-			.select(bus_signal)
+			.select(encoderOut)
 			);
 					
 	//instantiate alu
@@ -126,7 +135,7 @@ module datapath(
 		.RB(BusMuxOut),
 		.RY(BusMuxIn_Y),
 		.opcode(operation),
-		.brn_flag(con_out),			//??????????
+		.brn_flag(branch_flag),			//??????????
 		.incPC(IncPC),
 		.RC(C_data_out)                              
 	);			

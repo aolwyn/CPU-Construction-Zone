@@ -1,3 +1,4 @@
+
 module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 	input clr, clk, enable, read;
 	input [31:0] Mdatain, BusMuxOut;
@@ -9,21 +10,17 @@ module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 
 endmodule
 
+
 module Reg32(
-	input wire clr, clk, enable, 
-	input wire [31:0] D, 
+	input clr, clk, enable, 
+	input [31:0] D, 
 	output reg [31:0] Q
 );
-	parameter Q_INIT= 0;
-	initial Q = Q_INIT;				//initalize register value to 0
-
 	always@(posedge clk)
 	begin
-		if (clr) begin				//if clr is 1, set to 0
-			Q[31:0] = 32'b0;
-		end
-		else if(enable) begin		//if enable is 1 and clr is 0, Q=D
-			Q[31:0] = D[31:0];
-		end
+		if (clr)			//if clr is 1, set to 0
+			Q = 0;
+		else if(enable) 	//if enable is 1 and clr is 0, Q=D
+			Q = D;
 	end
 endmodule

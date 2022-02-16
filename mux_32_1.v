@@ -43,11 +43,11 @@ always@(*) begin
          5'd1 : BusMuxOut <= BusMuxIn_R1[31:0];
          5'd2 : BusMuxOut <= BusMuxIn_R2[31:0];
          5'd3 : BusMuxOut <= BusMuxIn_R3[31:0];
-			5'd4 : BusMuxOut <= BusMuxIn_R4[31:0];
+		 5'd4 : BusMuxOut <= BusMuxIn_R4[31:0];
          5'd5 : BusMuxOut <= BusMuxIn_R5[31:0];
          5'd6 : BusMuxOut <= BusMuxIn_R6[31:0];
          5'd7 : BusMuxOut <= BusMuxIn_R7[31:0];
-			5'd8 : BusMuxOut <= BusMuxIn_R8[31:0];
+		 5'd8 : BusMuxOut <= BusMuxIn_R8[31:0];
          5'd9 : BusMuxOut <= BusMuxIn_R9[31:0];
          5'd10: BusMuxOut <= BusMuxIn_R10[31:0];
          5'd11: BusMuxOut <= BusMuxIn_R11[31:0];
@@ -59,7 +59,7 @@ always@(*) begin
          5'd17: BusMuxOut <= BusMuxIn_LO[31:0];
          5'd18: BusMuxOut <= BusMuxIn_Z_high[31:0];
          5'd19: BusMuxOut <= BusMuxIn_Z_low[31:0];
-			5'd20: BusMuxOut <= BusMuxIn_PC[31:0];
+		 5'd20: BusMuxOut <= BusMuxIn_PC[31:0];
          5'd21: BusMuxOut <= BusMuxIn_MDR[31:0];
          5'd22: BusMuxOut <= BusMuxIn_InPort[31:0];
          5'd23: BusMuxOut <= C_sign_extended[31:0];

@@ -1,14 +1,16 @@
 `timescale 1ns/10ps
 
-module mux_2_1 (input wire [31:0] input1, input wire [31:0] input2, input wire signal, output reg [31:0] out);
+module mux_2_1 (
+input [31:0] input1, 
+input [31:0] input2, 
+input signal, 
+output reg [31:0] out);
  
-always@(*)begin
-		if (signal) begin
-			out[31:0] <= input2[31:0];
-		end
-		else begin
-			out[31:0] <= input1[31:0];
-		end
-	end
- 
+always@(signal)
+begin
+		if (signal==0)
+			out <= input2;
+		else
+			out <= input1;
+end
 endmodule

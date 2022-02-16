@@ -88,7 +88,7 @@ begin
         end 
         T1: begin 
               Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;   
-              Mdatain <= 32'h4A920000;       // opcode for OR R5, R2, R4� 
+              Mdatain <= 32'h4A920000;       // opcode for OR R5, R2, R4
         end 
         T2: begin 
               MDRout <= 1; IRin <= 1;    

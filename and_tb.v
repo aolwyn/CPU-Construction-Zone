@@ -3,10 +3,10 @@
 module and_tb;       
 	reg	PCout, ZHighout, Zlowout, MDRout, R2out, R4out;// add any other signals to see in your simulation
 	reg	MARin, PCin, MDRin, IRin, Yin;
-	reg 	IncPC, Read;
-	reg 	[4:0] AND; 
+	reg IncPC, Read;
+	reg	[4:0] AND; 
 	reg	R5in, R2in, R4in;
-	reg 	R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
+	reg R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg	HIin, LOin, ZHighIn, Cin, ZLowIn;
 	reg	Clock, Clear;
 	reg	[31:0] Mdatain;

@@ -1,9 +1,9 @@
 
 module datapath(
-	input PCout, ZHighout, ZLowout, MDR_out, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,
-   input [4:0] operation, 
-	input	R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
-            R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin,
+	input PCout, ZHighout, ZLowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
+	input [4:0] operation, 
+	input R5in, R2in, R4in, clk, Mdatain, clr, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+          R12in, R13in, R14in, R15in, HIin, LOin, ZHIin, ZLOin, Cin,
 	output [31:0] BusMuxOut
 
 /*  //Final inputs for datapath 
@@ -75,7 +75,7 @@ module datapath(
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
 	//select_encode_logic IRlogic(...);
 
-	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, MDRout);
+	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, BusMuxIn_MDR);
 
 	//input and output port will be added here
 	//conff logic may be added here 
@@ -86,7 +86,7 @@ module datapath(
 	
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order
-	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDR_out,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
+	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
 
 						
 	mux_32_1 busMux(
@@ -111,7 +111,7 @@ module datapath(
 			.BusMuxIn_Z_high(BusMuxIn_ZHI),
 			.BusMuxIn_Z_low(BusMuxIn_ZLO),
 			.BusMuxIn_PC(BusMuxIn_PC),
-			.BusMuxIn_MDR(MDRout),	
+			.BusMuxIn_MDR(BusMuxIn_MDR),	
 			.BusMuxIn_InPort(BusMuxIn_InPort),
 			.C_sign_extended(C_sign_extend),
 			.BusMuxOut(BusMuxOut),

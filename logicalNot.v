@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module logicalNot(output out[31:0], input in[31:0]);
+module logicalNot(output [31:0]out, input [31:0]in);
 
   assign out = ~in; 
     

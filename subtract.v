@@ -1,4 +1,4 @@
-module subtract(output out[31:0], input in1[31:0], in2[31:0]);
+module subtract(output [31:0]out, input [31:0]in1, in2);
 
 assign out = in1 - in2;
 

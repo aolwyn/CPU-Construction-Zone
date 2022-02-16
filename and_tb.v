@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module datapath_tb;       
+module and_tb;       
 	reg	PCout, ZHighout, Zlowout, MDRout, R2out, R4out;// add any other signals to see in your simulation
 	reg	MARin, PCin, MDRin, IRin, Yin;
 	reg 	IncPC, Read;

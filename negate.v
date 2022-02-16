@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module negate(output out[31:0], input in[31:0]);
+module negate(output [31:0]out, input [31:0]in);
 
   assign out = ~in+1; 
     

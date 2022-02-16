@@ -1,8 +1,8 @@
 
 TO DO:
 	- change divide to be more complicated
-	- write shift L
-	- write shift R
+	- write shift L <-- DONE
+	- write shift R <-- DONE
 	- check that all operations are complete
 	- check testbench for and
 	- write testbenches for all other operations

@@ -1,7 +1,11 @@
-`timescale 1ns / 1ps
+module rotate_R(
+	input [31:0] Ra,
+	output [63:0] Rout
+	);
+	
+	assign Rout = {8'h00000000, Ra[0], Ra[31:1]};
+endmodule
 
-module rotateRight(output [31:0]out, input [31:0]in);
-
-  assign out = {in[31],in[30:0]};
-
-endmodule    
+module rotate_L(input [31:0] Ra, output [63:0] Rout);
+	assign Rout = {8'h00000000, Ra[30:0], Ra[31]};
+endmodule

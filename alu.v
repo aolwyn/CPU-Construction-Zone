@@ -114,19 +114,18 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	//ALU Operations
 	add adder(.Ra(RA), .Rb(RB),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
 	logicalAnd land(RA,RB,land_out);
-	PCincrement pc_inc(RA, incPC, IncPC_out);
 	logicalOr lor(RA,RB,lor_out);
-	/*
-	divide div(RY,RB, div_out);
+	subtract subtractor(RA, RB, sub_diff);
+	multiply mul(RA,RB,mul_out);
 	logicalNot not_module(RB,not_out);
-
-	multiply mul(RY,RB,mul_out);
-	negate neg(RB,neg_out);
-	rotate_R ror_op(RY,ror_out);
-	rotate_L rol_op(RY ,rol_out);
-	shift_L shl(RY,shl_out);
-	shift_R shr(RY,shr_out);
-	subtract subtractor(.Ra(RY), .Rb(RB),.cin({1'd0}),.sum(sub_diff),.cout(sub_cout));
-	*/
+	rotate_R ror_op(RA,ror_out);
+	rotate_L rol_op(RA ,rol_out);
+	shift_L shl(RA,shl_out);
+	shift_R shr(RA,shr_out);
+	negate neg(RA,neg_out);
+	
+	//divide div(RA,RB, div_out);
+		
+	PCincrement pc_inc(RA, incPC, IncPC_out);
 
 endmodule

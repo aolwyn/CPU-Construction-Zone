@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module logicalOr(output [31:0]out, input [31:0] in2, in1);
+module logicalOr(input [31:0] in2, in1, output [31:0]out);
 
 assign out = in1 | in2;
 

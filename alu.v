@@ -4,7 +4,6 @@ module alu(
 	input clk, clear, incPC, brn_flag,
 	input wire [31:0] RA,
 	input wire [31:0] RB,
-	input wire [31:0] RY,
 
 	input wire [4:0] opcode,
 
@@ -92,7 +91,7 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 						RC[63:32] <= 32'd0;
 					end 
 					else begin
-						RC[31:0] <= RY[31:0];
+						RC[31:0] <= RA[31:0];
 						RC[63:32] <= 32'd0;
 					end
 				end
@@ -113,19 +112,20 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	end
 	
 	//ALU Operations
-	add adder(.Ra(RY), .Rb(RB),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
-	logicalAnd land(RY,RB,land_out);
-	PCincrement pc_inc(RA, IncPC, IncPC_out);
+	add adder(.Ra(RA), .Rb(RB),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
+	logicalAnd land(RA,RB,land_out);
+	PCincrement pc_inc(RA, incPC, IncPC_out);
+	logicalOr lor(RA,RB,lor_out);
 	/*
 	divide div(RY,RB, div_out);
 	logicalNot not_module(RB,not_out);
-	logicalOr lor(RY,RB,lor_out);
+
 	multiply mul(RY,RB,mul_out);
 	negate neg(RB,neg_out);
-	rotate_R ror_op(RY,RB,ror_out);
-	rotate_L rol_op(RY,RB,rol_out);
-	shift_L shl(RY,RB,shl_out);
-	shift_R shr(RY,RB,shr_out);
+	rotate_R ror_op(RY,ror_out);
+	rotate_L rol_op(RY ,rol_out);
+	shift_L shl(RY,shl_out);
+	shift_R shr(RY,shr_out);
 	subtract subtractor(.Ra(RY), .Rb(RB),.cin({1'd0}),.sum(sub_diff),.cout(sub_cout));
 	*/
 

@@ -4,7 +4,8 @@ module datapath(
 	input MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
 	input [4:0] operation, 
 	input R5in, R2in, R4in, clk, Mdatain, clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
-
+	
+	
 /*  //Final inputs for datapath 
 	input clk, clr, stop,
 	//input wire[31:0] InPort_input,	//for later

@@ -1,9 +1,9 @@
 `timescale 1ns/10ps
 
 module and_tb;       
-	reg	PCout, ZHighout, Zlowout, MDRout, R2out, R4out;// add any other signals to see in your simulation
+	reg	PCout, ZHighout, Zlowout, HIout, LOout, InPortout, Cout, MDRout, R2out, R4out;// add any other signals to see in your simulation
 	reg	MARin, PCin, MDRin, IRin, Yin;
-	reg IncPC, Read;
+	reg 	IncPC, Read;
 	reg	[4:0] AND; 
 	reg	R5in, R2in, R4in;
 	reg	HIin, LOin, ZHighIn, Cin, ZLowIn;
@@ -17,7 +17,7 @@ module and_tb;
     reg   [3:0] Present_state = Default; 
  
 //datapath DUT(clock, Clear, stop, bus_contents, operation);\
-datapath DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
+datapath DUT(PCout, ZHighout, Zlowout, HIout, LOout, InPortout, Cout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
             AND, R5in, R2in, R4in, Clock, Mdatain, Clear, HIin, LOin, ZHighIn, ZLowIn, Cin, branch_flag);
 
 // add test logic here 
@@ -53,6 +53,7 @@ begin
 						R2out <= 0;   R4out <= 0;   MARin <= 0;   ZLowIn <= 0;  
 						PCin <=0;   MDRin <= 0;   IRin  <= 0;   Yin <= 0;  
 						IncPC <= 0;   Read <= 0;   AND <= 0;    branch_flag <=0;
+						HIout<=0;  LOout<=0; InPortout<=0; Cout<=0;
 						R5in <= 0; R2in <= 0; R4in <= 0; Mdatain <= 32'h00000000;
         end 
         Reg_load1a: begin   

@@ -134,7 +134,7 @@ module datapath(
 		.clear(clr), 
 		.RA(BusMuxOut),
 		.RB(BusMuxOut),
-		.RY(BusMuxIn_Y),
+		//.RY(BusMuxIn_Y),
 		.opcode(operation),
 		.brn_flag(branch_flag),			//??????????
 		.incPC(IncPC),

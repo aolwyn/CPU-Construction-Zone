@@ -1,7 +1,7 @@
 `timescale 1ns/10ps
 
 module alu(
-	input clk, clear, incPC, brn_flag,
+	input brn_flag,
 	input wire [31:0] RA,
 	input wire [31:0] RB,
 
@@ -14,7 +14,7 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 				  Logical_AND = 5'b01001, Logical_OR = 5'b01010, Negate = 5'b10000, Not = 5'b10001, addi = 5'b01011, andi = 5'b01100, ori = 5'b01101, ldw = 5'b00000, ldwi = 5'b00001, stw = 5'b00010,
 				  branch = 5'b10010, jr = 5'b10011, jal = 5'b10100, mfhi = 5'b10111, mflo = 5'b11000, in = 5'b10101, out = 5'b10110, nop = 5'b11001, halt = 5'b11010;
 	
-	wire [31:0] IncPC_out, shr_out, shl_out, lor_out, land_out, neg_out, not_out, adder_sum, adder_cout, sub_diff, sub_cout, rol_out, ror_out;
+	wire [31:0] shr_out, shl_out, lor_out, land_out, neg_out, not_out, adder_sum, adder_cout, sub_diff, sub_cout, rol_out, ror_out;
 	wire [63:0] mul_out, div_out;
 
 	always @(*)
@@ -123,9 +123,6 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	shift_L shl(RA,shl_out);
 	shift_R shr(RA,shr_out);
 	negate neg(RA,neg_out);
-	
-	//divide div(RA,RB, div_out);
-		
-	PCincrement pc_inc(RA, incPC, IncPC_out);
+	divide_32 div(RA,RB, div_out);
 
 endmodule

@@ -3,8 +3,10 @@ module datapath(
 	input PCout, ZHighout, ZLowout, HIout, LOout, InPortout, Cout,
 	input MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
 	input [4:0] operation, 
-	input R5in, R2in, R4in, clk, Mdatain, clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
-	
+	input R5in, R2in, R4in, clk, 
+	input [31:0] Mdatain, 
+	input clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
+);
 	
 /*  //Final inputs for datapath 
 	input clk, clr, stop,
@@ -13,8 +15,6 @@ module datapath(
 	output [31:0] BusMuxOut,
 	output [4:0] operation
 */
-);
-
 	/*	//commented out for early testing
 	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
 			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
@@ -98,6 +98,7 @@ module datapath(
 	//********inputs may be in wrong order
 	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
 
+//	$monitor ("[$monitor] time = %0t Rout=0x%0h  encoderOut=0x%0h", $time, Rout, encoderOut);
 						
 	mux_32_1 busMux(
 			.BusMuxIn_R0(BusMuxIn_R0),
@@ -130,17 +131,13 @@ module datapath(
 					
 	//instantiate alu
 	alu the_alu(
-		.clk(clk),
-		.clear(clr), 
 		.RA(BusMuxOut),
 		.RB(BusMuxOut),
 		//.RY(BusMuxIn_Y),
 		.opcode(operation),
-		.brn_flag(branch_flag),			//??????????
-		.incPC(IncPC),
+		.brn_flag(branch_flag),	
 		.RC(C_data_out)                              
 	);			
-
 
 	//instantiate the control unit here
 

@@ -34,3 +34,9 @@ module CLA4(input wire [3:0] Ra, input wire [3:0] Rb, input wire cin, output wir
 	assign sum[3:0] =P^c;
 	
 endmodule
+/*
+module add(input [31:0] in1, in2, output out);
+	assign out = in1 + in2;
+	
+	end module
+	*/

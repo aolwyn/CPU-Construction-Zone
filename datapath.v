@@ -8,27 +8,9 @@ module datapath(
 	input clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
 );
 	
-/*  //Final inputs for datapath 
-	input clk, clr, stop,
-	//input wire[31:0] InPort_input,	//for later
-	//output wire[31:0] OutPort_output,		//for later
-	output [31:0] BusMuxOut,
-	output [4:0] operation
-*/
-	/*	//commented out for early testing
-	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
-			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
-			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
-	*/
-
-	//wire [15:0] R_enableIn;					//from the CPU
-	//wire [15:0] enableR_IR;					//output from select_enable logic
-	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic
 	reg  [15:0] enableReg;					//chooses the register to enable
 	reg  [15:0] Rout;						//chooses which register to read from
-	//wire [3:0]  decoder_in;
-
-
+	
 	initial begin
 		Rout = 16'b0;
 		enableReg = 16'b0;
@@ -142,3 +124,21 @@ module datapath(
 	//instantiate the control unit here
 
 endmodule
+
+
+/*  //Final inputs for datapath 
+	input clk, clr, stop,
+	//input wire[31:0] InPort_input,	//for later
+	//output wire[31:0] OutPort_output,		//for later
+	output [31:0] BusMuxOut,
+	output [4:0] operation
+*/
+	/*	//commented out for early testing
+	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
+			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
+			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
+	*/
+	//wire [3:0]  decoder_in;
+	//wire [15:0] R_enableIn;					//from the CPU
+	//wire [15:0] enableR_IR;					//output from select_enable logic
+	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic

@@ -40,8 +40,9 @@ module datapath(
 			enableReg[4] <= R4in;
 			enableReg[5] <= R5in;
 
-			Rout[13] <= R2out;
-			Rout[14] <= R4out;
+			Rout[2] <= R2out;
+			Rout[4] <= R4out;
+			//Rout[0]<= 1;
 			/*
 			if (enableR_IR)enableReg<=enableR_IR; 
 			else enableReg<=R_enableIn;
@@ -72,16 +73,15 @@ module datapath(
 	Reg32 r12(clr,clk,enableReg[12],BusMuxOut,BusMuxIn_R12);
 	Reg32 r13(clr,clk,enableReg[13],BusMuxOut,BusMuxIn_R13);
 	Reg32 r14(clr,clk,enableReg[14],BusMuxOut,BusMuxIn_R14);
-	Reg32 r15(clr,clk,enableReg[15],BusMuxOut,BusMuxIn_R15);
-	
-	//other registers
 	Reg32 PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
 	Reg32 Z_HI(clr,clk,ZHIin,C_data_out,BusMuxIn_ZHI);
 	Reg32 Z_LO(clr,clk,ZLOin,C_data_out,BusMuxIn_ZLO);
 	Reg32 HI(clr,clk,HIin,BusMuxOut,BusMuxIn_HI);
 	Reg32 LO(clr,clk,LOin,BusMuxOut,BusMuxIn_LO);
-
+	Reg32 r15(clr,clk,enableReg[15],BusMuxOut,BusMuxIn_R15);
+	
+	//other registers
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
 	//select_encode_logic IRlogic(...);
 
@@ -131,7 +131,7 @@ module datapath(
 					
 	//instantiate alu
 	alu the_alu(
-		.RA(BusMuxOut),
+		.RA(BusMuxIn_Y),
 		.RB(BusMuxOut),
 		//.RY(BusMuxIn_Y),
 		.opcode(operation),

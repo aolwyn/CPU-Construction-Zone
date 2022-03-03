@@ -11,7 +11,6 @@ initial
         alu_in_b <= 32'd2;
         #300 op_code <= 5'b10001;
 
-    //try all the other opcodes here (mul and div not currently working)
     end
     alu alu_unit(brn_flag, alu_in_a, alu_in_b, op_code, alu_out);
 endmodule

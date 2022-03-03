@@ -8,27 +8,9 @@ module datapath(
 	input clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
 );
 	
-/*  //Final inputs for datapath 
-	input clk, clr, stop,
-	//input wire[31:0] InPort_input,	//for later
-	//output wire[31:0] OutPort_output,		//for later
-	output [31:0] BusMuxOut,
-	output [4:0] operation
-*/
-	/*	//commented out for early testing
-	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
-			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
-			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
-	*/
-
-	//wire [15:0] R_enableIn;					//from the CPU
-	//wire [15:0] enableR_IR;					//output from select_enable logic
-	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic
 	reg  [15:0] enableReg;					//chooses the register to enable
 	reg  [15:0] Rout;						//chooses which register to read from
-	//wire [3:0]  decoder_in;
-
-
+	
 	initial begin
 		Rout = 16'b0;
 		enableReg = 16'b0;
@@ -50,7 +32,6 @@ module datapath(
 			else Rout<=16'b0;	
 			*/
 		end 
-
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
@@ -97,9 +78,7 @@ module datapath(
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order
 	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
-
-//	$monitor ("[$monitor] time = %0t Rout=0x%0h  encoderOut=0x%0h", $time, Rout, encoderOut);
-						
+//	$monitor ("[$monitor] time = %0t Rout=0x%0h  encoderOut=0x%0h", $time, Rout, encoderOut);					
 	mux_32_1 busMux(
 			.BusMuxIn_R0(BusMuxIn_R0),
 			.BusMuxIn_R1(BusMuxIn_R1), 
@@ -140,5 +119,22 @@ module datapath(
 	);			
 
 	//instantiate the control unit here
-
 endmodule
+
+
+/*  //Final inputs for datapath 
+	input clk, clr, stop,
+	//input wire[31:0] InPort_input,	//for later
+	//output wire[31:0] OutPort_output,		//for later
+	output [31:0] BusMuxOut,
+	output [4:0] operation
+*/
+	/*	//commented out for early testing
+	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
+			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
+			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
+	*/
+	//wire [3:0]  decoder_in;
+	//wire [15:0] R_enableIn;					//from the CPU
+	//wire [15:0] enableR_IR;					//output from select_enable logic
+	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic

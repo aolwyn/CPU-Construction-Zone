@@ -65,7 +65,10 @@ module datapath(
 
 	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, BusMuxIn_MDR);
 
-	//input and output port will be added here
+	//input and output ports
+	Reg32 input_port(clr, clk, 1'd1, inPort_input, BusMuxIn_In.Port);
+	Reg32 output_port(clr, clk, enable_outPort, BusMuxOut, outPort_output); 
+
 	//conff logic may be added here 
 
 	marUnit MAR(clr, clk, MARin, BusMuxOut, BusMuxIn_MAR);

@@ -1,9 +1,9 @@
 
 module datapath(
 	input PCout, ZHighout, ZLowout, HIout, LOout, InPortout, Cout,
-	input MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
+	input MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
 	input [4:0] operation, 
-	input R5in, R2in, R4in, clk, 
+	input clk, 
 	input [31:0] Mdatain, 
 	input clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
 );
@@ -11,26 +11,20 @@ module datapath(
 	reg  [15:0] enableReg;					//chooses the register to enable
 	reg  [15:0] Rout;						//chooses which register to read from
 	
+	wire [15:0] enableReg_IR, Rout_IR;
+
 	initial begin
 		Rout = 16'b0;
 		enableReg = 16'b0;
 	end
 
 		//sets register enable and out signals based on provided info from CPU or IR
-		always@(*)begin		
-			enableReg[2] <= R2in;
-			enableReg[4] <= R4in;
-			enableReg[5] <= R5in;
-
-			Rout[2] <= R2out;
-			Rout[4] <= R4out;
-			//Rout[0]<= 1;
-			/*
-			if (enableR_IR)enableReg<=enableR_IR; 
+		always@(*)begin			
+			if (enableReg_IR) enableReg<=enableReg_IR; 
 			else enableReg<=R_enableIn;
-			if (RegOut_IR)Rout<=RegOut_IR; 
+
+			if (Rout_IR) Rout<=Rout_IR; 
 			else Rout<=16'b0;	
-			*/
 		end 
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
@@ -39,7 +33,10 @@ module datapath(
 	wire [31:0] BusMuxOut;
 
 	//registers 0-15
-	Reg32 r0(clr,clk,enableReg[0],BusMuxOut,BusMuxIn_R0);
+	wire [31:0] r0_out;
+	Reg32 r0(clr,clk,enableReg[0],BusMuxOut,r0_out);
+	assign BusMuxIn_R0 = {32{!Baout}} & r0_out;
+
 	Reg32 r1(clr,clk,enableReg[1],BusMuxOut,BusMuxIn_R1);
 	Reg32 r2(clr,clk,enableReg[2],BusMuxOut,BusMuxIn_R2);
 	Reg32 r3(clr,clk,enableReg[3],BusMuxOut,BusMuxIn_R3);
@@ -64,16 +61,19 @@ module datapath(
 	
 	//other registers
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
-	//select_encode_logic IRlogic(...);
+	select_and_encode IRlogic(BusMuxIn_IR, GRA, GRB, GRC, R_in, R_out, Baout, operation, enableReg_IR, Rout_IR, C_sign_extend);
 
 	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, BusMuxIn_MDR);
 
 	//input and output port will be added here
 	//conff logic may be added here 
 
-	//MAR unit will be added here
+	marUnit MAR(clr, clk, MARin, BusMuxOut, BusMuxIn_MAR);
 	
 	//memoryRam stuff
+	memoryRam RAM (
+	.address(BusMuxIn_MAR), .clock(clk), .data(BusMuxIn_MDR), .wren(RAM_wr_enable), .q(RAMout)
+	);
 	
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order

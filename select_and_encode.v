@@ -1,8 +1,10 @@
 module select_and_encode(
-input Gra, Grb, Grc, Rin, Rout, Baout, 
-input [31:0] IRin, 
+ input [31:0] IRin		//instruction
+ input Gra, Grb, Grc, Rin, Rout, Baout, 
+ output [4:0] opcode,
  output [15:0] regin, regout,
- output reg[31:0] C_sign_extended);
+ output reg[31:0] C_sign_extended
+ );
  
  wire [3:0] a, b, c, out;
  reg[16:0] decoderOutput;
@@ -80,12 +82,16 @@ input [31:0] IRin,
  assign regin[1] = out[1] & Rin;
  assign regin[0] = out[0] & Rin;
  
+
+ assign opcode = IRin[31:27];
+
  always @ (*)
  begin
-	if(IRin[18] ==0)
+	if(IRin[18] == 0)
 	C_sign_extended = {13'b0000000000000, IRin[18:0]};
 	else
 	C_sign_extended = {13'b1111111111111, IRin[18:0]};
-	end
-	endmodule
+ end
+  
+endmodule
 	

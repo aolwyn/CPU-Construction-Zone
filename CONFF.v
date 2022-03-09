@@ -18,9 +18,17 @@ module CONFF(output reg q, input clk, CONin, reset, input [1:0] IRbits, input [3
         default: decoderOut = 4'bx;
       endcase
     end
-  assign norout = !{busMuxOut[0] | 
+  assign norout = !{busMuxOut[0] | busMuxOut[1] | busMuxOut[2] | busMuxOut[3] |busMuxOut[4]|busMuxOut[5]|busMuxOut[6]|busMuxOut[7]|busMuxOut[8]|busMuxOut[9]|busMuxOut[10]);
                     
-   --finish assigning the other signals <--- note to self
+  assign orO = decoderOut[0] & norout;
+                    
+  assign ornonzero = (!(norout)) & decoderOut[1];
+  
+                    assign orgte0 = decoderOut[2] & (!(busMuxOut[31]));
+                    assign orlt0 = decoderOut[3] & busMuxOut[31];
+                    assign dconFF = or0 | ornonzero | orgte0 | orlt0;
+                    
+                   
                     
   always @ (*)
     begin

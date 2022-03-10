@@ -17,11 +17,20 @@ module CONFF(
   
   always @ (*)
     begin
-      case {(IR1,IR0)}
-        2'b00: decoderOut = 4'b0001;
-        2'b01: decoderOut = 4'b0010;
-        2'b10: decoderOut = 4'b0100;
-        2'b11: decoderOut = 4'b1000;
+      case ({IR1,IR0})
+        2'b00: 
+		  begin
+			decoderOut = 4'b0001;
+		  end
+        2'b01: begin 
+			decoderOut = 4'b0010;
+		  end
+        2'b10: begin
+			decoderOut = 4'b0100;
+		  end
+        2'b11: begin
+			decoderOut = 4'b1000;
+		  end
         default: decoderOut = 4'bx;
       endcase
     end

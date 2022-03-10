@@ -1,23 +1,4 @@
 
 TO DO:
-	- change divide to be more complicated
-	- fix multiply 
-	- write shift L <-- DONE
-	- write shift R <-- DONE
-	- check that all operations are complete
-	- check testbench for and
-	- write testbenches for all other operations
-		- not
-		- or
-		- negate
-		- multiply
-		- divide
-		- add
-		- subtract
-		- shift L
-		- shift R
-		- rotate L and R
-	- check testbench for all other operations
-	- determine report layout and requirements
-	- write report
-
+	- operations for phase 2 (testing)
+		- ld, ldi, ....

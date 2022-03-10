@@ -1,5 +1,5 @@
 module select_and_encode(
- input [31:0] IRin		//instruction
+ input [31:0] IRin,		//instruction
  input Gra, Grb, Grc, Rin, Rout, Baout, 
  output [4:0] opcode,
  output [15:0] regin, regout,
@@ -48,44 +48,45 @@ module select_and_encode(
    default :  out = 16'bx;
  endcase
  
- assign regout[15] = out[15] & (Rout | BAout);
- assign regout[14] = out[14] & (Rout | BAout);
- assign regout[13] = out[13] & (Rout | BAout);
- assign regout[12] = out[12] & (Rout | BAout);
- assign regout[11] = out[11] & (Rout | BAout);
- assign regout[10] = out[10] & (Rout | BAout);
- assign regout[9] = out[9] & (Rout | BAout);	
- assign regout[8] = out[8] & (Rout | BAout);
- assign regout[7] = out[7] & (Rout | BAout);
- assign regout[6] = out[6] & (Rout | BAout);
- assign regout[5] = out[5] & (Rout | BAout);
- assign regout[4] = out[4] & (Rout | BAout);
- assign regout[3] = out[3] & (Rout | BAout);
- assign regout[2] = out[2] & (Rout | BAout); 
- assign regout[1] = out[1] & (Rout | BAout);
- assign regout[0] = out[0] & (Rout | BAout); 
- 
- assign regin[15] = out[15] & Rin;
- assign regin[14] = out[14] & Rin;
- assign regin[13] = out[13] & Rin;
- assign regin[12] = out[12] & Rin;
- assign regin[11] = out[11] & Rin;
- assign regin[10] = out[10] & Rin;
- assign regin[9] = out[9] & Rin;
- assign regin[8] = out[8] & Rin;
- assign regin[7] = out[7] & Rin;
- assign regin[6] = out[6] & Rin;
- assign regin[5] = out[5] & Rin;
- assign regin[4] = out[4] & Rin;
- assign regin[3] = out[3] & Rin;
- assign regin[2] = out[2] & Rin;
- assign regin[1] = out[1] & Rin;
- assign regin[0] = out[0] & Rin;
- 
+	 assign regout[15] = out[15] & (Rout | BAout);
+	 assign regout[14] = out[14] & (Rout | BAout);
+	 assign regout[13] = out[13] & (Rout | BAout);
+	 assign regout[12] = out[12] & (Rout | BAout);
+	 assign regout[11] = out[11] & (Rout | BAout);
+	 assign regout[10] = out[10] & (Rout | BAout);
+	 assign regout[9] = out[9] & (Rout | BAout);	
+	 assign regout[8] = out[8] & (Rout | BAout);
+	 assign regout[7] = out[7] & (Rout | BAout);
+	 assign regout[6] = out[6] & (Rout | BAout);
+	 assign regout[5] = out[5] & (Rout | BAout);
+	 assign regout[4] = out[4] & (Rout | BAout);
+	 assign regout[3] = out[3] & (Rout | BAout);
+	 assign regout[2] = out[2] & (Rout | BAout); 
+	 assign regout[1] = out[1] & (Rout | BAout);
+	 assign regout[0] = out[0] & (Rout | BAout); 
+	 
+	 assign regin[15] = out[15] & Rin;
+	 assign regin[14] = out[14] & Rin;
+	 assign regin[13] = out[13] & Rin;
+	 assign regin[12] = out[12] & Rin;
+	 assign regin[11] = out[11] & Rin;
+	 assign regin[10] = out[10] & Rin;
+	 assign regin[9] = out[9] & Rin;
+	 assign regin[8] = out[8] & Rin;
+	 assign regin[7] = out[7] & Rin;
+	 assign regin[6] = out[6] & Rin;
+	 assign regin[5] = out[5] & Rin;
+	 assign regin[4] = out[4] & Rin;
+	 assign regin[3] = out[3] & Rin;
+	 assign regin[2] = out[2] & Rin;
+	 assign regin[1] = out[1] & Rin;
+	 assign regin[0] = out[0] & Rin;
+	 
+	 assign opcode = IRin[31:27];
+	 
+ end
 
- assign opcode = IRin[31:27];
-
- always @ (*)
+ always@(*)
  begin
 	if(IRin[18] == 0)
 	C_sign_extended = {13'b0000000000000, IRin[18:0]};

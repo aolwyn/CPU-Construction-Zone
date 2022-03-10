@@ -1,4 +1,11 @@
-module CONFF(output reg q, input clk, CONin, reset, input [1:0] IRbits, input [31:0] busMuxOut);
+`timescale 1ns/10ps
+
+module CONFF(
+    output reg q,       //to control unit
+    input CONin, clr,  //CONin is control signal
+    input [1:0] IRbits, 
+    input [31:0] busMuxOut  
+    );
   
   wire IR0 = IRbits[0];
   wire IR1 = IRbits[1];
@@ -18,24 +25,23 @@ module CONFF(output reg q, input clk, CONin, reset, input [1:0] IRbits, input [3
         default: decoderOut = 4'bx;
       endcase
     end
-  assign norout = !{busMuxOut[0] | busMuxOut[1] | busMuxOut[2] | busMuxOut[3] |busMuxOut[4]|busMuxOut[5]|busMuxOut[6]|busMuxOut[7]|busMuxOut[8]|busMuxOut[9]|busMuxOut[10]);
-                    
-  assign orO = decoderOut[0] & norout;
-                    
-  assign ornonzero = (!(norout)) & decoderOut[1];
+
+  assign norout     = (busMuxOut == 32'd0) ? 1'b1 : 1'b0;
+  assign or0        = decoderOut[0] & norout;                    
+  assign ornonzero  = (!(norout)) & decoderOut[1];
   
-                    assign orgte0 = decoderOut[2] & (!(busMuxOut[31]));
-                    assign orlt0 = decoderOut[3] & busMuxOut[31];
-                    assign dconFF = or0 | ornonzero | orgte0 | orlt0;
+  assign orgte0     = decoderOut[2] & (!(busMuxOut[31]));
+  assign orlt0      = decoderOut[3] & busMuxOut[31];
+  assign dconff     = or0 | ornonzero | orgte0 | orlt0;
                     
                    
                     
   always @ (*)
     begin
-      if( reset == 0)
-        q<= 0;
-      else if (CONin ==1)
-        q<= dconFF;
+      if(clr == 0)
+        q <= 0;
+      else if (CONin)
+        q <= dconff;
     end
 endmodule
                         

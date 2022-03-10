@@ -1,11 +1,16 @@
 
 module datapath(
-	input PCout, ZHighout, ZLowout, HIout, LOout, InPortout, Cout,
-	input MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read,	//signals for encoder
+	output [31:0] OutPort_output;
+	input clk, clr;
+	input IncPC, CONin;
+	input [31:0] Mdatain;
 	input [4:0] operation, 
-	input clk, 
-	input [31:0] Mdatain, 
-	input clr, HIin, LOin, ZHIin, ZLOin, Cin, branch_flag
+	input RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read;
+	input GRA, GRB, GRC;
+	input HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort;
+	input InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout;
+	input [31:0] inPort_input,
+	input R_in, R_out,  Cin, branch_flag
 );
 	
 	reg  [15:0] enableReg;					//chooses the register to enable
@@ -20,16 +25,16 @@ module datapath(
 
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin			
-			if (enableReg_IR) enableReg<=enableReg_IR; 
-			else enableReg<=R_enableIn;
+			if (enableReg_IR) enableReg <= enableReg_IR; 
+			//else enableReg<=R_enableIn;
 
-			if (Rout_IR) Rout<=Rout_IR; 
-			else Rout<=16'b0;	
+			if (Rout_IR) Rout <= Rout_IR; 
+			else Rout <= 16'b0;	
 		end 
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
-	wire [31:0] bus_signal, C_data_out;
+	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, BusMuxIn_In.Port, outPort_output, con_out, RAMout;
 	wire [31:0] BusMuxOut;
 
 	//registers 0-15
@@ -69,7 +74,7 @@ module datapath(
 	Reg32 input_port(clr, clk, 1'd1, inPort_input, BusMuxIn_In.Port);
 	Reg32 output_port(clr, clk, enable_outPort, BusMuxOut, outPort_output); 
 
-	//conff logic may be added here 
+	CONFF conff_logic (con_out, CONin, clr, BusMuxIn_IR, BusMuxOut);
 
 	marUnit MAR(clr, clk, MARin, BusMuxOut, BusMuxIn_MAR);
 	

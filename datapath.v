@@ -3,7 +3,6 @@ module datapath(
 	output [31:0] OutPort_output,
 	input clk, clr,
 	input IncPC, CONin,
-	input [31:0] Mdatain,
 	input RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read,
 	input GRA, GRB, GRC,
 	input HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort,
@@ -34,7 +33,7 @@ module datapath(
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
 	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAMout;
-	wire [31:0] BusMuxOut;
+	wire [31:0] BusMuxOut, Mdatain;
 	wire [4:0] operation;
 
 	//registers 0-15
@@ -57,6 +56,7 @@ module datapath(
 	Reg32 r13(clr,clk,enableReg[13],BusMuxOut,BusMuxIn_R13);
 	Reg32 r14(clr,clk,enableReg[14],BusMuxOut,BusMuxIn_R14);
 	Reg32 PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
+	PCincrement incPC(clk, IncPC, BusMuxIn_PC, C_data_out);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
 	Reg32 Z_HI(clr,clk,ZHIin,C_data_out,BusMuxIn_ZHI);
 	Reg32 Z_LO(clr,clk,ZLOin,C_data_out,BusMuxIn_ZLO);
@@ -76,11 +76,11 @@ module datapath(
 
 	CONFF conff_logic (con_out, CONin, clr, BusMuxIn_IR, BusMuxOut);
 
-	marUnit MAR(clr, clk, MARin, BusMuxOut, BusMuxIn_MAR);
+	marUnit MAR(clr, clk, MARin, 32'h00000001, BusMuxIn_MAR);
 	
 	//memoryRam stuff
 	memoryRam RAM (
-	.address(BusMuxIn_MAR), .clock(clk), .data(BusMuxIn_MDR), .wren(RAM_wr_enable), .q(RAMout)
+	.a(BusMuxIn_MAR), .clk(clk), .d(BusMuxIn_MDR), .we(RAM_wr_enable), .q(Mdatain)
 	);
 	
 	wire [4:0] encoderOut;

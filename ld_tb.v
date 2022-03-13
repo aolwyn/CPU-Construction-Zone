@@ -1,7 +1,7 @@
 `timescale 1ns / 10ps
 
 module ld_tb; 	
-	reg Clock, Clear, IncPC;
+	reg Clock, Clear;
 	reg IncPC, CON_enable;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable, MDR_read;
 	reg Gra, Grb, Grc;

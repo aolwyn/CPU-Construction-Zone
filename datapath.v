@@ -7,7 +7,7 @@ module datapath(
 	input GRA, GRB, GRC,
 	input HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort,
 	input InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout,
-	input [31:0] inPort_input,
+	input [31:0] inPort_input, Mdatain,
 	input R_in, R_out, Cin, branch_flag
 );
 	
@@ -33,7 +33,7 @@ module datapath(
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
 	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAMout;
-	wire [31:0] BusMuxOut, Mdatain;
+	wire [31:0] BusMuxOut;
 	wire [4:0] operation;
 
 	//registers 0-15

@@ -1,14 +1,14 @@
 `timescale 1ns / 10ps
 
 module ld_tb; 	
-	reg Clock, Clear;
+	reg Clock, Clear, IncPC;
 	reg IncPC, CON_enable;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable, MDR_read;
 	reg Gra, Grb, Grc;
 	reg HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, OutPort_enable;
 	reg InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout;
 	wire [31:0] OutPort_output;
-	reg [31:0] InPort_input;
+	reg [31:0] InPort_input, Mdatain;
 	reg R_in, R_out, Cin, branch_flag;
 
 parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
@@ -17,10 +17,10 @@ parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
 reg	[3:0] Present_state = Default;
 
 datapath DUT(	
-	OutPort_output, Clock, Clear, IncPC, CONin,
+	OutPort_output, Clock, Clear, IncPC, CONin, 
 	RAM_write, MDR_enable, MDRout, MAR_enable,  IR_enable, MDR_read,
 	Gra, Grb, Grc, HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, OutPort_enable,
-    InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout, InPort_input,
+    InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout, InPort_input, Mdatain,
 	R_in, R_out, Cin, branch_flag          	
 );
 
@@ -65,7 +65,7 @@ begin
 		T1: begin										
 				PCout <=0; MAR_enable <= 0; IncPC <= 0; ZLowIn <= 0;
 				MDR_read <= 1; MDR_enable <= 1; RAM_write <= 0;						//Get instruction from mem
-				ZLowout<= 1; PC_enable <= 1; 										//PC is saving new value
+				ZLowout<= 1; PC_enable <= 1; 	Mdatain	<= 32'h00900002; 						//PC is saving new value
 		end
 		T2: begin
 				ZLowout<= 0; PC_enable <= 0; MDR_enable <= 0; 
@@ -77,7 +77,7 @@ begin
 		end
 		T4: begin
 				Grb <= 0; BAout <= 0; Y_enable <= 0;
-				ZLowIn <= 1;												//save output of alu
+				ZLowIn <= 1; Cout <= 1;												//save output of alu
 		end
 		T5: begin
 				ZLowIn <= 0;
@@ -85,7 +85,7 @@ begin
 		end
 		T6: begin
 				ZLowout<= 0; MAR_enable <= 0;
-				MDR_read <=1; MDR_enable <= 1;						//MDR reads address in mem
+				MDR_read <=1; MDR_enable <= 1; //Mdatain <= 						//MDR reads address in mem
 		end
 		T7: begin	
 				Gra <= 1; R_in <= 1; MDRout <= 1;					//save data from MDR to A

@@ -1,34 +1,34 @@
 module select_and_encode(
  input [31:0] IRin,		//instruction
- input Gra, Grb, Grc, Rin, Rout, Baout, 
+ input Gra, Grb, Grc, Rin, Rout, BAout, 
  output [4:0] opcode,
  output [15:0] regin, regout,
- output reg[31:0] C_sign_extended
+ output [31:0] C_sign_extended
  );
  
- wire [3:0] a, b, c, out;
- reg[16:0] decoderOutput;
+ wire [3:0] a, b, c, out0;
+ reg[16:0] out;
  
  assign a[3] = IRin[26] & Gra;
  assign a[2] = IRin[25] & Gra;
  assign a[1] = IRin[24] & Gra;
  assign a[0] = IRin[23] & Gra;
 
- assign b[3] = IRin[22] & Gra;
- assign b[2] = IRin[21] & Gra;
- assign b[1] = IRin[20] & Gra;
- assign b[0] = IRin[19] & Gra;
+ assign b[3] = IRin[22] & Grb;
+ assign b[2] = IRin[21] & Grb;
+ assign b[1] = IRin[20] & Grb;
+ assign b[0] = IRin[19] & Grb;
  
- assign c[3] = IRin[18] & Gra;
- assign c[2] = IRin[17] & Gra;
- assign c[1] = IRin[16] & Gra;
- assign c[0] = IRin[15] & Gra;
+ assign c[3] = IRin[18] & Grc;
+ assign c[2] = IRin[17] & Grc;
+ assign c[1] = IRin[16] & Grc;
+ assign c[0] = IRin[15] & Grc;
  
- assign out = a | b | c;
+ assign out0 = a | b | c;
  
  always @ (*)
  begin
-  case(out)
+  case(out0)
 	4'b0000 :  out = 16'b0000000000000001;
 	4'b0001 :  out = 16'b0000000000000010;
 	4'b0010 :  out = 16'b0000000000000100; 
@@ -47,7 +47,7 @@ module select_and_encode(
 	4'b1111 :  out = 16'b1000000000000000;
    default :  out = 16'bx;
  endcase
- 
+ end
 	 assign regout[15] = out[15] & (Rout | BAout);
 	 assign regout[14] = out[14] & (Rout | BAout);
 	 assign regout[13] = out[13] & (Rout | BAout);
@@ -84,15 +84,6 @@ module select_and_encode(
 	 
 	 assign opcode = IRin[31:27];
 	 
- end
-
- always@(*)
- begin
-	if(IRin[18] == 0)
-	C_sign_extended = {13'b0000000000000, IRin[18:0]};
-	else
-	C_sign_extended = {13'b1111111111111, IRin[18:0]};
- end
-  
+	 assign C_sign_extended = {{13{IRin[18]}},IRin[18:0]};
 endmodule
 	

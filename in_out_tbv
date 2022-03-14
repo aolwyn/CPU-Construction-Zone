@@ -1,6 +1,6 @@
 `timescale 1ns / 10ps
 
-module ldi_tb; 	
+module in_out_tb; 	
 	reg Clock, Clear;
 	reg IncPC, CON_enable;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable, MDR_read;
@@ -39,8 +39,6 @@ begin
 		T0					:	#40 Present_state = T1;
 		T1					:	#40 Present_state = T2;
 		T2					:	#40 Present_state = T3;
-		T3					:	#40 Present_state = T4;
-		T4					:	#40 Present_state = T5;
 		endcase
 	end
 
@@ -64,7 +62,8 @@ begin
 		end
 		T1: begin	//loadss RAM output into MDR 									
 				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'h08800007; 	
+				Mdatain	<= 32'hA8800000; 	//in
+				//Mdatain	<= 32'hB0800000; 	//out
 				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
 				ZLowout<= 1; 
 		end
@@ -75,15 +74,8 @@ begin
 		end
 		T3: begin
 				MDRout<= 0; IR_enable <= 0;	
-				Grb <= 1; BAout <= 1; Y_enable <= 1;				//put value of B into Y
-		end
-		T4: begin
-				Grb <= 0; BAout <= 0; Y_enable <= 0;
-				ZHighIn <= 1; ZLowIn <= 1; Cout <= 1;						//ADD??	Add b and i and add them		//Cout puts C_sign_extend onto the bus
-		end
-		T5: begin
-				ZHighIn <= 0; ZLowIn <= 0; Cout <= 0;		
-				ZLowout<= 1; Gra = 1; R_out <=1; R_in <= 0;
+				Gra <= 1; R_out <= 1; InPortout <= 1;	//input
+				//Gra <= 1; R_out <= 1; OutPort_enable <= 1;	//output
 		end
 	endcase
 end

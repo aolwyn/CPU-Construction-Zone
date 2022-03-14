@@ -26,6 +26,8 @@ datapath DUT(
 
 initial 
 	begin
+		//DUT.path.Reg32.genregisters[1].register_inst.value_32 = 32'd50;
+	
 		Clear = 0;
 		Clock = 0;
 		forever #10 Clock = ~ Clock;
@@ -64,15 +66,16 @@ begin
 		end
 		T1: begin										
 				PCout <=0; MAR_enable <= 0; IncPC <= 0; ZLowIn <= 0;
-				MDR_read <= 1; MDR_enable <= 1; RAM_write <= 0;						//Get instruction from mem
-				ZLowout<= 1; PC_enable <= 1; 	Mdatain	<= 32'h00900002; 						//PC is saving new value
+				Mdatain	<= 32'h00900002; 	
+				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
+				ZLowout<= 1; PC_enable <= 1; 			//PC is saving new value
 		end
 		T2: begin
-				ZLowout<= 0; PC_enable <= 0; MDR_enable <= 0; 
+				ZLowout<= 0; PC_enable <= 0; MDR_enable <= 0; MDR_read <= 0;
 				MDRout<= 1; IR_enable <= 1; 								//save inst to IR
 		end
 		T3: begin
-				MDRout<= 0; IR_enable <= 0; 	
+				MDRout<= 0; IR_enable <= 0;	
 				Grb <= 1; BAout <= 1; Y_enable <= 1;				//put value of B into Y
 		end
 		T4: begin
@@ -92,7 +95,6 @@ begin
 		end
 	endcase
 end
-
 
 endmodule
 

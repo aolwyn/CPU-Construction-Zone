@@ -8,7 +8,7 @@ module memoryRam(q, a, d, we, clk);
 	reg [31:0] addr_reg;
 	initial
 	begin //INIT 
-		$readmem("ram.mem", ram);
+		$readmemh("ram.mem", ram);
 	end
 	
     always @(posedge clk) begin

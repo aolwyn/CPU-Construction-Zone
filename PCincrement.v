@@ -11,9 +11,9 @@ initial newPC = qInitial;
 always @ (posedge clk)
     begin
         if(clr)
-            newPC = 0;
+            newPC = 1;
         else if (en)
-            newPC = inputPC +1;
+            newPC = inputPC + 1;
 
     end
 

@@ -1,14 +1,14 @@
 
-DONE:
+WRITTEN:
 - ld
+- ldi
 - addi
 - store
+- out
+- in
 
 TO DO:
 Sam
-	- ldi
-	- out
-	- in
 	- brzr
 	- brmi
 	- brpl

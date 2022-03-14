@@ -1,4 +1,22 @@
 
+DONE:
+- ld
+- addi
+- store
+
 TO DO:
-	- operations for phase 2 (testing)
-		- ld, ldi, ....
+Sam
+	- ldi
+	- out
+	- in
+	- brzr
+	- brmi
+	- brpl
+Adam
+	- store i
+	- andi
+	- ori
+	- jr
+	- jal
+	- mfhi
+	- mflo

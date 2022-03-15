@@ -8,10 +8,7 @@ WRITTEN:
 - in
 
 TO DO:
-Sam
-	- brzr
-	- brmi
-	- brpl
+
 Adam
 	- store i
 	- andi

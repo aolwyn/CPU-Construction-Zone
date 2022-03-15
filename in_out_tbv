@@ -9,7 +9,7 @@ module in_out_tb;
 	reg InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout;
 	wire [31:0] OutPort_output;
 	reg [31:0] InPort_input, Mdatain;
-	reg R_in, R_out, Cin, branch_flag;
+	reg R_in, R_out, Cin;
 
 parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
 					Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101,
@@ -21,7 +21,7 @@ datapath DUT(
 	RAM_write, MDR_enable, MDRout, MAR_enable,  IR_enable, MDR_read,
 	Gra, Grb, Grc, HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, OutPort_enable,
     InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout, InPort_input, Mdatain,
-	R_in, R_out, Cin, branch_flag          	
+	R_in, R_out, Cin          	
 );
 
 initial 

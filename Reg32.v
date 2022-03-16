@@ -10,12 +10,14 @@ module MDRreg (clr, clk, enable, Mdatain, BusMuxOut, read, MDRout);
 
 endmodule
 
-
-module Reg32(
+module Reg32 #(parameter VAL = 0)(
 	input clr, clk, enable, 
 	input [31:0] D, 
 	output reg [31:0] Q
 );
+
+	initial Q = VAL;
+
 	always@(posedge clk)
 	begin
 		if (clr)			//if clr is 1, set to 0

@@ -1,7 +1,5 @@
-
 module jal_tb;
-
-reg Clock, Clear;
+	reg Clock, Clear;
 	reg IncPC, CON_enable;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable, MDR_read;
 	reg Gra, Grb, Grc;
@@ -9,7 +7,7 @@ reg Clock, Clear;
 	reg InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout;
 	wire [31:0] OutPort_output;
 	reg [31:0] InPort_input, Mdatain;
-	reg R_in, R_out, Cin, branch_flag;
+	reg R_in, R_out, Cin;
 
 parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
 					Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101,
@@ -21,7 +19,7 @@ datapath DUT(
 	RAM_write, MDR_enable, MDRout, MAR_enable,  IR_enable, MDR_read,
 	Gra, Grb, Grc, HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, OutPort_enable,
     InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout, InPort_input, Mdatain,
-	R_in, R_out, Cin, branch_flag          	
+	R_in, R_out, Cin          	
 );
 
 initial 
@@ -49,35 +47,40 @@ begin
 always @(Present_state)// do the required job in each state
 begin
 	case (Present_state)              //assert the required signals in each clock cycle
-		Default: begin	//initialize all signals
-					PCout <= 0; ZLowout <= 0; MDRout <= 0; 
-					MAR_enable <= 0; ZHighIn <= 0; ZLowIn <= 0; CON_enable<=0; 
-					OutPort_enable<=0; InPort_input<=32'd0;
-					PC_enable <=0; MDR_enable <= 0; IR_enable <= 0; 
-					Y_enable <= 0; IncPC <= 0; RAM_write<=0;
-					Gra<=0; Grb<=0; Grc<=0;
-				   BAout<=0; Cout<=0; InPortout<=0; ZHighout<=0; LOout<=0; HIout<=0; 
-					HI_enable<=0; LO_enable<=0; R_out <=0; R_in <=0;MDR_read<=0;
+		Default: begin    //initialize all signals
+                    PCout <= 0; ZLowout <= 0; MDRout <= 0; 
+                    MAR_enable <= 0; ZHighIn <= 0; ZLowIn <= 0; CON_enable<=0; 
+                    OutPort_enable<=0; InPort_input<=32'd0;
+                    PC_enable <=0; MDR_enable <= 0; IR_enable <= 0; 
+                    Y_enable <= 0; IncPC <= 0; RAM_write<=0;
+                    Gra<=0; Grb<=0; Grc<=0;
+						 BAout<=0; Cout<=0; InPortout<=0; ZHighout<=0; LOout<=0; HIout<=0; 
+                    HI_enable<=0; LO_enable<=0; R_out <=0; R_in <=0;MDR_read<=0;
+						  
+						  IncPC <= 1; PC_enable <= 1;
+        end
+        
+      T0: begin//see if you need to de-assert these signals	
+				IncPC <= 0; PC_enable <= 0; Clear <= 0; 
+				PCout<= 1; MAR_enable <= 1; ZLowIn <= 1;	//increaase PC and send address to MAR and save in Z
 		end
-		
-		T0: begin
-		pcout <= 1; mar_enable <= 1; IncPC <= 1; ZlowIn <= 1;
+		T1: begin	//loadss RAM output into MDR 									
+				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
+				Mdatain	<= 32'h59080002; 				//addi r2, r1, 2
+				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
+				ZLowout<= 1; 
 		end
-		
-		T1: begin
-		zlowout <= 1; pc_enable <= 1; MDR_read <= 1; MDR_enable <= 1;
-		end
-		
 		T2: begin
-		MDROut <= 1; IR_enable <= 1;
-		end 
-		
+				ZLowout<= 0;  MDR_enable <= 0; MDR_read <= 0;
+				MDRout<= 1; IR_enable <= 1; ZLowIn <= 1;			 //save inst to IR
+				PC_enable <= 1; IncPC <= 1;							//increase PC
+		end
 		T3: begin
-		Grb <= 1; R_in <= 1; pcout <= 1;
+				Grb <= 1; R_in <= 1; pcout <= 1;
 		end
 		
 		T4: begin
-		Gra <= 1; R_out <= 1; pc_enable <= 1;
+				Gra <= 1; R_out <= 1; pc_enable <= 1;
 		end
 		
 		endcase

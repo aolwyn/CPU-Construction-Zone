@@ -24,7 +24,7 @@ module datapath(
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin			
 			if (enableReg_IR) enableReg <= enableReg_IR; 
-			//else enableReg<=R_enableIn;
+			//else enableReg<=Reg_enableIn;
 
 			if (Rout_IR) Rout <= Rout_IR; 
 			else Rout <= 16'b0;	
@@ -42,8 +42,8 @@ module datapath(
 	Reg32 r0(clr,clk,enableReg[0],BusMuxOut,r0_out);
 	assign BusMuxIn_R0 = {32{!Baout}} & r0_out;
 
-	Reg32 r1(clr,clk,enableReg[1],BusMuxOut,BusMuxIn_R1);
-	Reg32 r2(clr,clk,enableReg[2],BusMuxOut,BusMuxIn_R2);
+	Reg32 #(20) r1(clr,clk,enableReg[1],BusMuxOut,BusMuxIn_R1);
+	Reg32 #(8) r2(clr,clk,enableReg[2],BusMuxOut,BusMuxIn_R2);
 	Reg32 r3(clr,clk,enableReg[3],BusMuxOut,BusMuxIn_R3);
 	Reg32 r4(clr,clk,enableReg[4],BusMuxOut,BusMuxIn_R4);
 	Reg32 r5(clr,clk,enableReg[5],BusMuxOut,BusMuxIn_R5);

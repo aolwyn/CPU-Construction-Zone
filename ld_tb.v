@@ -26,8 +26,6 @@ datapath DUT(
 
 initial 
 	begin
-		//DUT.path.Reg32.genregisters[1].register_inst.value_32 = 32'd50;
-	
 		Clear = 0;
 		Clock = 0;
 		forever #10 Clock = ~ Clock;
@@ -51,28 +49,26 @@ begin
 always @(Present_state)// do the required job in each state
 begin
 	case (Present_state)              //assert the required signals in each clock cycle
-		Default: begin	//initialize all signals
-					PCout <= 0; ZLowout <= 0; MDRout <= 0; 
+				Default: begin	//initialize all signals
+					ZLowout <= 0; MDRout <= 0; 
 					MAR_enable <= 0; ZHighIn <= 0; ZLowIn <= 0; CON_enable<=0; 
 					OutPort_enable<=0; InPort_input<=32'd0;
-					PC_enable <=0; MDR_enable <= 0; IR_enable <= 0; 
-					Y_enable <= 0; IncPC <= 0; RAM_write<=0;
+					MDR_enable <= 0; IR_enable <= 0;Y_enable <= 0; RAM_write<=0;
 					Gra<=0; Grb<=0; Grc<=0;
 				   BAout<=0; Cout<=0; InPortout<=0; ZHighout<=0; LOout<=0; HIout<=0; 
 					HI_enable<=0; LO_enable<=0; R_out <=0; R_in <=0;MDR_read<=0;
+					
+					IncPC <= 1; PC_enable <= 1;
 		end
 		T0: begin//see if you need to de-assert these signals	
-				PCout<= 1; MAR_enable <= 1; IncPC <= 1; ZLowIn <= 1;	//increaase PC and send address to MAR and save in Z
+				IncPC <= 0; PC_enable <= 0; Clear <= 0; 
+				PCout<= 1; MAR_enable <= 1; ZLowIn <= 1;	//increaase PC and send address to MAR and save in Z
 		end
-		T1: begin										
-				PCout <=0; MAR_enable <= 0; IncPC <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'h00900002; 	
+		T1: begin	//loads RAM output into MDR 									
+				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
+				Mdatain	<= 32'h00900002; 				//ld r1, 2(r2)
 				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
-				ZLowout<= 1; PC_enable <= 1; 			//PC is saving new value
-		end
-		T2: begin
-				ZLowout<= 0; PC_enable <= 0; MDR_enable <= 0; MDR_read <= 0;
-				MDRout<= 1; IR_enable <= 1; 								//save inst to IR
+				ZLowout<= 1; 
 		end
 		T3: begin
 				MDRout<= 0; IR_enable <= 0;	

@@ -66,7 +66,7 @@ begin
 		end
 		T1: begin	//loadss RAM output into MDR 									
 				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'h91000023; 	
+				//Mdatain	<= 32'h91000023; 	
 					//brzr r2, 35:  91000023
 					//brnz r2, 35:  91080023
 					//brpl r2, 35:  91100023

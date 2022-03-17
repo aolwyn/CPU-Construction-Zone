@@ -1,3 +1,4 @@
+
 module jal_tb;
 	reg Clock, Clear;
 	reg IncPC, CON_enable;
@@ -76,11 +77,11 @@ begin
 				PC_enable <= 1; IncPC <= 1;							//increase PC
 		end
 		T3: begin
-				Grb <= 1; R_in <= 1; pcout <= 1;
+				Grb <= 1; R_in <= 1; PCout <= 1;
 		end
 		
 		T4: begin
-				Gra <= 1; R_out <= 1; pc_enable <= 1;
+				Gra <= 1; R_out <= 1; PC_enable <= 1;
 		end
 		
 		endcase

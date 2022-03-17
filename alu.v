@@ -98,14 +98,10 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 						RC[63:32] <= 32'd0;
 					end
 				end
-				
-				halt: begin
-					
-				end
-				
-				nop: begin
-					
-				end
+								halt: begin
+									end
+								nop: begin
+									end
 				
 				default: begin
 					RC[63:0] <= 64'd0;

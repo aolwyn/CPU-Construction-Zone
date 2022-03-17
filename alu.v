@@ -102,14 +102,11 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 									end
 								nop: begin
 									end
-				
 				default: begin
 					RC[63:0] <= 64'd0;
 				end
-
 			endcase
 	end
-	
 	//ALU Operations
 	add adder(.Ra(RA), .Rb(RB),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
 	logicalAnd land(RA,RB,land_out);
@@ -123,5 +120,4 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	shift_R shr(RA,shr_out);
 	negate neg(RA,neg_out);
 	divide_32 div(RA,RB, div_out);
-
 endmodule

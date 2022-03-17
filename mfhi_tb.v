@@ -67,7 +67,7 @@ begin
 		end
 		T1: begin	//loadss RAM output into MDR 									
 				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'hB9000000; 				//(mfhi r2) where r2 is initially 11 and hi reg is loaded with 32'hc35
+				//Mdatain	<= 32'hB9000000; 				//(mfhi r2) where r2 is initially 0x02 and hi reg is loaded with 32'hc35
 				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
 				ZLowout<= 1; 
 		end

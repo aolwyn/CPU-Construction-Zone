@@ -59,7 +59,7 @@ begin
 		end
 		T1: begin	//loadss RAM output into MDR 									
 				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'h59080002; 				//addi r2, r1, 2
+				//Mdatain	<= 32'h59080002; 				//addi r2, r1, 2
 				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
 				ZLowout<= 1; 
 		end

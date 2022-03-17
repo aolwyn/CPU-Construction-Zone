@@ -8,7 +8,8 @@ module datapath(
 	input HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort,
 	input InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout,
 	input [31:0] inPort_input, Mdatain,
-	input R_in, R_out, Cin
+	input R_in, R_out, Cin,
+	input ctrl
 );
 	
 	reg  [15:0] enableReg;					//chooses the register to enable
@@ -56,7 +57,7 @@ module datapath(
 	Reg32 r12(clr,clk,enableReg[12],BusMuxOut,BusMuxIn_R12);
 	Reg32 r13(clr,clk,enableReg[13],BusMuxOut,BusMuxIn_R13);
 	Reg32 r14(clr,clk,enableReg[14],BusMuxOut,BusMuxIn_R14);
-	Reg32 PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
+	Reg32 #(1)PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
 	PCincrement incPC(clk, clr,((q==1)? en : 0) || IncPC, BusMuxIn_PC, BusMuxOut);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
 	Reg32 Z_HI(clr,clk,ZHIin,C_data_out,BusMuxIn_ZHI);
@@ -69,7 +70,7 @@ module datapath(
 	Reg32 IR(clr,clk,IRin,BusMuxOut,BusMuxIn_IR);
 	select_and_encode IRlogic(BusMuxIn_IR, GRA, GRB, GRC, R_in, R_out, Baout, operation, enableReg_IR, Rout_IR, C_sign_extend);
 
-	MDRreg MDR(clr, clk, MDRin, Mdatain, BusMuxOut, Read, BusMuxIn_MDR);
+	MDRreg MDR(clr, clk, MDRin, RAM_out, BusMuxOut, Read, BusMuxIn_MDR);
 
 	//input and output ports
 	Reg32 input_port(clr, clk, 1'd1, inPort_input, BusMuxIn_InPort);
@@ -80,10 +81,8 @@ module datapath(
 	marUnit MAR(clr, clk, MARin, BusMuxOut, BusMuxIn_MAR);
 	
 	//memoryRam stuff
-	memoryRam RAM (
-	.a(BusMuxIn_MAR), .clk(clk), .d(BusMuxIn_MDR), .we(RAM_wr_enable), .q(RAM_out)
-	);
-	
+	//memoryRam RAM (.a(BusMuxIn_MAR[8:0]), .clk(clk), .d(BusMuxIn_MDR), .we(RAM_wr_enable), .q(RAM_out));
+	RAM ram(.address(BusMuxIn_MAR[8:0]), .clock(clk), .data(BusMuxIn_MDR), .rden(Read), .wren(RAM_wr_enable), .q(RAM_out));
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order
 	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);
@@ -124,6 +123,7 @@ module datapath(
 		//.RY(BusMuxIn_Y),
 		.opcode(operation),
 		.brn_flag(branch_flag),	
+		.ctrl (ctrl),
 		.RC(C_data_out)                              
 	);			
 

@@ -10,12 +10,10 @@ reg Clock, Clear;
 	wire [31:0] OutPort_output;
 	reg [31:0] InPort_input, Mdatain;
 	reg R_in, R_out, Cin;
-
 parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
 					Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101,
 					Reg_load3b = 4'b0110, T0= 4'b0111, T1= 4'b1000,T2= 4'b1001, T3= 4'b1010, T4= 4'b1011, T5= 4'b1100, T6 = 4'b1101, T7 = 4'b1111;
 reg	[3:0] Present_state = Default;
-
 datapath DUT(	
 	OutPort_output, Clock, Clear, IncPC, CONin, 
 	RAM_write, MDR_enable, MDRout, MAR_enable,  IR_enable, MDR_read,
@@ -23,7 +21,6 @@ datapath DUT(
     InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout, InPort_input, Mdatain,
 	R_in, R_out, Cin          	
 );
-
 initial 
 	begin
 		Clear = 0;
@@ -31,7 +28,6 @@ initial
 		forever #10 Clock = ~ Clock;
 		#500 $finish;
 end
-
 always @(posedge Clock)//finite state machine; if clock rising-edge
 begin
 	case (Present_state)
@@ -42,7 +38,6 @@ begin
 
 		endcase
 	end
-
 always @(Present_state)// do the required job in each state
 begin
 	case (Present_state)              //assert the required signals in each clock cycle
@@ -57,8 +52,7 @@ begin
                     HI_enable<=0; LO_enable<=0; R_out <=0; R_in <=0;MDR_read<=0;
 						  
 						  IncPC <= 1; PC_enable <= 1;
-        end
-        
+        end   
       T0: begin//see if you need to de-assert these signals	
 				IncPC <= 0; PC_enable <= 0; Clear <= 0; 
 				PCout<= 1; MAR_enable <= 1; ZLowIn <= 1;	//increaase PC and send address to MAR and save in Z
@@ -77,7 +71,6 @@ begin
 		T3: begin
 				Gra <= 1; R_out <= 1; PC_enable <= 1;
 		end
-	
 	endcase
 	end
 	endmodule

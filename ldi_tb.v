@@ -75,7 +75,7 @@ begin
 		end
 		T3: begin
 				MDRout<= 0; IR_enable <= 0;	
-				Grb <= 1; BAout <= 1; Y_enable <= 1; ctrl <= 1;			//put value of B into Y
+				Grb <= 1; BAout <= 1; Y_enable <= 1; 	//put value of B into Y
 		end
 		T4: begin
 				Grb <= 0; BAout <= 0; Y_enable <= 0;

@@ -58,17 +58,21 @@ begin
 				   BAout<=0; Cout<=0; InPortout<=0; ZHighout<=0; LOout<=0; HIout<=0; 
 					HI_enable<=0; LO_enable<=0; R_out <=0; R_in <=0;MDR_read<=0;
 					
-					IncPC <= 1; PC_enable <= 1;
+
 		end
 		T0: begin//see if you need to de-assert these signals	
-				IncPC <= 0; PC_enable <= 0; Clear <= 0; 
-				PCout<= 1; MAR_enable <= 1; ZLowIn <= 1;	//increaase PC and send address to MAR and save in Z
+				Clear <= 0; IncPC <= 1; MDR_read <= 1;
+				PCout<= 1; MAR_enable <= 1; 	//increaase PC and send address to MAR and save in Z
 		end
-		T1: begin	//loads RAM output into MDR 									
-				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0;
-				Mdatain	<= 32'h00900002; 				//ld r1, 2(r2)
+		T1: begin	//loadss RAM output into MDR 									
+				PCout<= 0; MAR_enable <= 0; ZLowIn <= 0; IncPC <= 0;
+				//Mdatain	<= 32'h08800007; 				//ldi r1 7			//ldi r2 2
 				MDR_read <= 1; MDR_enable <= 1; 		//Get instruction from mem
-				ZLowout<= 1; 
+				PC_enable <= 1; 
+		end
+		T2: begin
+				ZLowout<= 0;  MDR_enable <= 0; MDR_read <= 0; PC_enable <= 0;
+				MDRout<= 1; IR_enable <= 1;			 //save inst to IR
 		end
 		T3: begin
 				MDRout<= 0; IR_enable <= 0;	

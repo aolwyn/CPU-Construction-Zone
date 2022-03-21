@@ -4,7 +4,7 @@ module control_unit(
 	output reg		PCout, ZHighout, ZLowout, MDRout, MAR_enable, PC_enable, MDR_enable, IR_enable, Y_enable, IncPC, MDR_read, 
 					HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write, Gra, Grb, Grc, R_enable, Rout, BAout, CON_enable,
 					enableInputPort, OutPort_enable, InPortout, Run,
-	output reg		[15:0] R_enableIn,
+	output reg		[15:0] Reg_enableIn,
 	input			[31:0] IR,
 	input			Clock, Reset, Stop
 );
@@ -170,25 +170,25 @@ begin
 	case(Present_state)
 		Reset_state: begin 
 			Run <= 1;
-			R_enableIn <= 0;
-			//Reset <=1 ;
-			//Clear <= 1;
+			Reg_enableIn <= 0;
+			//Reset <= 1;
+			//Clear <= 0;
 			Gra <= 0; Grb <= 0; Grc <= 0; Y_enable <= 0;	
 			PCout<= 0; ZHighout<=0; ZLowout<=0; MDRout<=0; MAR_enable<=0; PC_enable<=0; MDR_enable<=0; IR_enable<=0; Y_enable<=0; IncPC<=0; MDR_read<=0;
 			HIin<=0; LOin<=0; HIout<=0; LOout<=0; ZHighIn<=0; ZLowIn<=0; Cout<=0; RAM_write<=0; 
-			R_enable<=0; Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0;
+			Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0;
 		end
 		fetch0: begin
-			PCout <= 1; MAR_enable <= 1; 
+			PCout <= 1; MAR_enable <= 1; IncPC <= 1;
 		end 
 		fetch1: begin
-			PCout <= 0; MAR_enable <= 0; 
-			MDR_enable <= 1; MDR_read<=1; ZLowout <= 1; 
+			PCout <= 0; MAR_enable <= 0; IncPC <= 0;
+			MDR_enable <= 1; MDR_read <= 1; ZLowout <= 1; 
+			PC_enable <= 1;
 		end 
 		fetch2: begin
-			MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; 
-			MDRout <= 1; IR_enable <= 1; PC_enable <= 1; IncPC <= 1;	
-			#21 PC_enable <= 0;
+			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0;
+			MDRout <= 1; IR_enable <= 1; 	
 		end 
 		//***********************************************
 		add3, sub3: begin	
@@ -369,11 +369,11 @@ begin
 		//***********************************************
 		jal3: begin
 			MDRout <= 0; IR_enable <= 0; PC_enable <= 0;IncPC <= 0;	
-			PCout <= 1; R_enableIn <= 16'h4000; 
+			PCout <= 1; Reg_enableIn <= 16'h4000; 
 		end
 
 		jal4: begin
-			R_enableIn <= 16'h0000; PCout <= 0;		
+			Reg_enableIn <= 16'h0000; PCout <= 0;		
 			Gra <= 1; Rout <= 1; PC_enable <= 1;
 		end
 		//***********************************************

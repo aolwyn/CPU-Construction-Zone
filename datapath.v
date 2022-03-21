@@ -1,21 +1,20 @@
 
 module datapath(
+	output [31:0] BusMuxOut,
 	output [31:0] OutPort_output,
-	input clk, clr,
-	input IncPC, CONin,
-	input RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read,
-	input GRA, GRB, GRC,
-	input HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort,
-	input InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout,
-	input [31:0] inPort_input, Mdatain,
-	input R_in, R_out, Cin,
-	input ctrl
+	input [31:0] inPort_input,
+	input clk, clr, rst, stop
 );
 	
 	reg  [15:0] enableReg;					//chooses the register to enable
 	reg  [15:0] Rout;						//chooses which register to read from
+
+	wire RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read, GRA, GRB, GRC;
+	wire HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort, enable_inPort;
+	wire InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout, IncPC;
+	wire R_in, R_out, Cin, CONin, run;
 	
-	wire [15:0] enableReg_IR, Rout_IR;
+	wire [15:0] enableReg_IR, enableReg_CPU, Rout_IR;
 
 	initial begin
 		Rout = 16'b0;
@@ -25,7 +24,7 @@ module datapath(
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin			
 			if (enableReg_IR) enableReg <= enableReg_IR; 
-			//else enableReg<=Reg_enableIn;
+			else enableReg <= enableReg_CPU;
 
 			if (Rout_IR) Rout <= Rout_IR; 
 			else Rout <= 16'b0;	
@@ -34,7 +33,6 @@ module datapath(
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
 	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAMout;
-	wire [31:0] BusMuxOut, RAM_out;
 	wire [4:0] operation;
 	wire branch_flag;
 
@@ -73,7 +71,7 @@ module datapath(
 	MDRreg MDR(clr, clk, MDRin, RAM_out, BusMuxOut, Read, BusMuxIn_MDR);
 
 	//input and output ports
-	Reg32 input_port(clr, clk, 1'd1, inPort_input, BusMuxIn_InPort);
+	Reg32 input_port(clr, clk, enable_inPort, inPort_input, BusMuxIn_InPort);
 	Reg32 output_port(clr, clk, enable_outPort, BusMuxOut, outPort_output); 
 
 	CONFF conff_logic (branch_flag, CONin, clr, BusMuxIn_IR, BusMuxOut);
@@ -120,14 +118,51 @@ module datapath(
 	alu the_alu(
 		.RA(BusMuxIn_Y),
 		.RB(BusMuxOut),
-		//.RY(BusMuxIn_Y),
 		.opcode(operation),
 		.brn_flag(branch_flag),	
-		.ctrl (ctrl),
 		.RC(C_data_out)                              
 	);			
 
 	//instantiate the control unit here
+	control_unit CPU(
+		.PCout(PCout),
+		.ZHighout(ZHighout),
+		.ZLowout(ZLowout),
+		.MDRout(MDRout),
+		.MAR_enable(MARin),
+		.PC_enable(PCin),
+		.MDR_enable(MDRin),
+		.IR_enable(IRin),
+		.Y_enable(Yin),
+		.IncPC(IncPC),
+		.MDR_read(Read),
+		.HIin(HIin),
+		.LOin(LOin),
+		.HIout(HIout),
+		.LOout(LOout),
+		.ZHighIn(ZHIin),
+		.ZLowIn(ZLOin),
+		.Cout(Cout),
+		.RAM_write(RAM_wr_enable),
+		.Gra(GRA),
+		.Grb(GRB),
+		.Grc(GRC),
+		.R_enable(R_in),
+		.Rout(R_out),
+		.BAout(Baout),
+		.CON_enable(CONin),
+		.enableInputPort(enable_inPort),
+		.OutPort_enable(enable_outPort),
+		.InPortout(InPortout),
+		.Run(run),
+		.Reg_enableIn(enableReg_CPU),
+		.IR(BusMuxIn_IR),
+		.Clock(clk),
+		.Reset(rst),
+		.Stop(stop)
+
+	);
+
 endmodule
 
 
@@ -143,7 +178,4 @@ endmodule
 			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
 			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
 	*/
-	//wire [3:0]  decoder_in;
-	//wire [15:0] R_enableIn;					//from the CPU
-	//wire [15:0] enableR_IR;					//output from select_enable logic
-	//wire [15:0] RegOut_IR;					//was Rout_IR, output from select_enable logic
+

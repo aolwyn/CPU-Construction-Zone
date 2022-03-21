@@ -190,7 +190,8 @@ begin
 			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0;
 			MDRout <= 1; IR_enable <= 1; 	
 		end 
-		//***********************************************
+		//*********************************************** <-- Good 2 Go
+				
 		add3, sub3: begin	
 			MDRout <= 0; IR_enable <= 0; PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1; Y_enable <= 1;
@@ -203,7 +204,8 @@ begin
 				Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
 				ZLowout <= 1;Gra<=1;R_enable<=1;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Double check the after 40 sec thing
 		or3, and3, shl3, shr3, rol3, ror3: begin	
 			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb<=1;Rout<=1;Y_enable<=1;
@@ -217,7 +219,8 @@ begin
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		mul3, div3: begin	
 			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1;Y_enable <= 1;  
@@ -237,7 +240,8 @@ begin
 			ZLowout<= 0; LOin <= 0;
 			ZHighout<= 1; HIin <= 1; 
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		not3, neg3: begin	
 			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
@@ -247,7 +251,7 @@ begin
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 		end
 
-		//***********************************************
+		//*********************************************** <-- should be good, unsure about ZHighIn<= 1 in Andi 4
 		andi3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;Rout<=1;Y_enable<=1;
@@ -263,23 +267,26 @@ begin
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
-		//***********************************************
+		
+		//*********************************************** <--- 2x check addi4
 		addi3: begin
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
-			Grb<=1;Rout<=1;Y_enable<=1;
+			MDRout <= 0; IR_enable <= 0; PC_enable <= 0; IncPC <= 0;	
+			Grb<=1; Rout<=1; Y_enable<=1;
 		end
 
 		addi4: begin
 			Grb<=0;Rout<=0;Y_enable<=0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+			Cout<=1; ZLowIn <= 1; //ZHighIn <= 1;
 		end
 
 		addi5: begin
-			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+		
+			Cout<=0; ZHighIn <= 0; ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		ori3: begin
 			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;Rout<=1;Y_enable<=1;
@@ -291,11 +298,13 @@ begin
 		end
 
 		ori5: begin
+		
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
+			#40 ZLowout <= 0;Gra<=1; R_enable<=0;//Rout<=1;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- 2x check ZHighIn in ld4
 		ld3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;BAout<=1;Y_enable<=1;
@@ -303,7 +312,7 @@ begin
 
 		ld4: begin
 			Grb<=0;BAout<=0;Y_enable<=0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1; //might need ZHighIn removed?
 		end
 
 		ld5: begin
@@ -319,7 +328,8 @@ begin
 			MDR_read <= 0; MDR_enable <= 0;
 			MDRout <= 1; Gra <= 1; R_enable <= 1;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		ldi3: begin
 			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;			
 			Grb<=1;BAout<=1;Y_enable<=1;
@@ -335,7 +345,8 @@ begin
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=0;R_enable<=0; 
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		st3: begin
 			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;BAout<=1;Y_enable<=1;
@@ -360,52 +371,60 @@ begin
 			MDRout <= 1; 
 			#5 RAM_write <= 1; 
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go 
 		jr3: begin
 			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;				
 			Gra<=1;Rout<=1; PC_enable <= 1;
 			#40 PC_enable <= 0;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		jal3: begin
 			MDRout <= 0; IR_enable <= 0; PC_enable <= 0;IncPC <= 0;	
-			PCout <= 1; Reg_enableIn <= 16'h4000; 
+			PCout <= 1; Reg_enableIn <= 16'h4000; Grb <= 1; //added Grb <= 1; , unsure of reg enable in
 		end
 
 		jal4: begin
-			Reg_enableIn <= 16'h0000; PCout <= 0;		
+			Reg_enableIn <= 16'h0000; PCout <= 0; //idk if reg enable in should be here but w/e		
 			Gra <= 1; Rout <= 1; PC_enable <= 1;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		mfhi3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; HIout<=1;
 			#40 Gra<=0;R_enable<=0; HIout<=0;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		mflo3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; LOout<=1;
 			#40 Gra<=0;R_enable<=0; LOout<=0;
 		end
-		//***********************************************
-		in3: begin
+		
+		//*********************************************** <-- Good 2 Go
+		in3: begin 
 			MDRout <= 0; IR_enable <= 0;			PC_enable <= 0; IncPC <= 0;
-			Gra<=1;R_enable<=1; InPortout <= 1;
+			Gra<=1;  InPortout <= 1; R_enable<=1;
 		end
-		//***********************************************
-		out3: begin
+		
+		//*********************************************** <-- Unsure about Y_Enable 
+		out3: begin //Gra <= 1; R_out <= 1; OutPort_enable <= 1; from testbench 
+		
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;Rout<=1;Y_enable<=1; OutPort_enable <= 1;
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		br3: begin
 			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
-			Gra<=1;Rout<=1; CON_enable<=1;
+			Grb<=1;Rout<=1; CON_enable<=1;
 		end
 
 		br4: begin
-			Gra<=0;Rout<=0; CON_enable<=0;
+			Grb<=0;Rout<=0; CON_enable<=0;
 				PCout<=1; Y_enable <= 1;
 		end
 
@@ -422,12 +441,15 @@ begin
 			ZLowout<=0; PC_enable<=0;
 				PCout<=1; 
 		end
-		//***********************************************
+		
+		//*********************************************** <-- Good 2 Go
 		nop3: begin
 		end
-		//***********************************************
+		
+		//*********************************************** <-- should be Good 2 Go, maybe add a #40?
 		halt3: begin
 			Run <= 0;
+			
 		end
 		default: begin 
 		end

@@ -1,18 +1,18 @@
 `timescale 1ns / 1ps
 
 module PCincrement #(parameter qInitial = 0)(
-    input clk, clr, en, IncPC,
+    input clk, clr, IncPC,
     input [31:0] inputPC,
     output reg[31:0] newPC
     );
 
 initial newPC = qInitial;
 
-always @ (posedge clk)
+always @ (negedge clk)
     begin
         if(clr)
-            newPC = 1;
-        else if (en)
+            newPC = 0;
+        else if (IncPC)
             newPC = inputPC + 1;
 
     end

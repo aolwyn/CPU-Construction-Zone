@@ -1,9 +1,9 @@
 
 module datapath(
-	output [31:0] BusMuxOut,
+	//output [31:0] BusMuxOut,
 	output [31:0] OutPort_output,
 	input [31:0] inPort_input,
-	input clk, clr, rst, stop
+	input clk, rst, stop
 );
 	
 	reg  [15:0] enableReg;					//chooses the register to enable
@@ -12,7 +12,7 @@ module datapath(
 	wire RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read, GRA, GRB, GRC;
 	wire HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort, enable_inPort;
 	wire InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout, IncPC;
-	wire R_in, R_out, Cin, CONin, run;
+	wire R_in, R_out, Cin, CONin, run, clr;
 	
 	wire [15:0] enableReg_IR, enableReg_CPU, Rout_IR;
 
@@ -24,7 +24,7 @@ module datapath(
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin			
 			if (enableReg_IR) enableReg <= enableReg_IR; 
-			else enableReg <= enableReg_CPU;
+			//else enableReg <= enableReg_CPU;
 
 			if (Rout_IR) Rout <= Rout_IR; 
 			else Rout <= 16'b0;	
@@ -32,7 +32,7 @@ module datapath(
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
-	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAMout;
+	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAMout, BusMuxOut, incOut;
 	wire [4:0] operation;
 	wire branch_flag;
 
@@ -55,8 +55,8 @@ module datapath(
 	Reg32 r12(clr,clk,enableReg[12],BusMuxOut,BusMuxIn_R12);
 	Reg32 r13(clr,clk,enableReg[13],BusMuxOut,BusMuxIn_R13);
 	Reg32 r14(clr,clk,enableReg[14],BusMuxOut,BusMuxIn_R14);
-	Reg32 #(1)PC(clr,clk,PCin,BusMuxOut,BusMuxIn_PC);
-	PCincrement incPC(clk, clr,((q==1)? en : 0) || IncPC, BusMuxIn_PC, BusMuxOut);
+	Reg32 PC(clr,clk,PCin,incOut,BusMuxIn_PC);
+	PCincrement incPC(clk, clr, IncPC, BusMuxIn_PC, incOut);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
 	Reg32 Z_HI(clr,clk,ZHIin,C_data_out,BusMuxIn_ZHI);
 	Reg32 Z_LO(clr,clk,ZLOin,C_data_out,BusMuxIn_ZLO);

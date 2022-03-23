@@ -31,9 +31,9 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 		if (Reset == 1'b1) Present_state = Reset_state;
 		if (Stop == 1'b1) Present_state = halt3;
 		else case (Present_state)
-			Reset_state		:	Present_state = fetch0;
-			fetch0			:	Present_state = fetch1;
-			fetch1			:	Present_state = fetch2;
+			Reset_state		:	#20 Present_state = fetch0;
+			fetch0			:  #20 Present_state = fetch1;
+			fetch1			:	#20 Present_state = fetch2;
 			fetch2			:	begin	
 										case	(IR[31:27])
 											5'b00011		:		Present_state=add3;	
@@ -87,9 +87,9 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			div5				: 	Present_state = div6;
 			div6				:	Present_state = fetch0;
 			
-			or3					: 	Present_state = or4;
-			or4					: 	Present_state = or5;
-			or5					:	Present_state = fetch0;
+			or3				: 	Present_state = or4;
+			or4				: 	Present_state = or5;
+			or5				:	Present_state = fetch0;
 			
 			and3				: 	Present_state = and4;
 			and4				: 	Present_state = and5;
@@ -179,12 +179,13 @@ begin
 			Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0;
 		end
 		fetch0: begin
-			PCout <= 1; MAR_enable <= 1; IncPC <= 1;
+			MDRout <= 0; 
+			PCout <= 1; MAR_enable <= 1; 
 		end 
 		fetch1: begin
-			PCout <= 0; MAR_enable <= 0; IncPC <= 0;
-			MDR_enable <= 1; MDR_read <= 1; ZLowout <= 1; 
-			PC_enable <= 1;
+			PCout <= 0; MAR_enable <= 0; //IncPC <= 0;
+			MDR_enable <= 1; MDR_read <= 1; //ZLowout <= 1; 
+			IncPC <= 1; PC_enable <= 1;
 		end 
 		fetch2: begin
 			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0;

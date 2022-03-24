@@ -1,4 +1,4 @@
-`timescale 1ns/10ps
+`timescale 1ns / 10ps
 
 module control_unit(
 	output reg		PCout, ZHighout, ZLowout, MDRout, MAR_enable, PC_enable, MDR_enable, IR_enable, Y_enable, IncPC, MDR_read, 
@@ -31,10 +31,10 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 		if (Reset == 1'b1) Present_state = Reset_state;
 		if (Stop == 1'b1) Present_state = halt3;
 		else case (Present_state)
-			Reset_state		:	#20 Present_state = fetch0;
-			fetch0			:  #20 Present_state = fetch1;
-			fetch1			:	#20 Present_state = fetch2;
-			fetch2			:	begin	
+			Reset_state		: Present_state = fetch0;
+			fetch0			:  #16 Present_state = fetch1;
+			fetch1			:	#24 Present_state = fetch2;
+			fetch2			:	#16 begin	
 										case	(IR[31:27])
 											5'b00011		:		Present_state=add3;	
 											5'b00100		: 		Present_state=sub3;
@@ -65,9 +65,9 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 											5'b11010		:		Present_state=halt3;
 										endcase
 									end
-			add3				: 	Present_state = add4;
-			add4				:	Present_state = add5;
-			add5 				:	Present_state = fetch0;
+			add3				: 	#16 Present_state = add4;
+			add4				:	#16 Present_state = add5;
+			add5 				:	#16 Present_state = fetch0;
 			
 			addi3				: 	Present_state = addi4;
 			addi4				:	Present_state = addi5;
@@ -117,15 +117,15 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			not3				: 	Present_state = not4;
 			not4				: 	Present_state = fetch0;
 			
-			ld3					: 	Present_state = ld4;
-			ld4					: 	Present_state = ld5;
-			ld5					: 	Present_state = ld6;
-			ld6					: 	Present_state = ld7;
-			ld7					:  Present_state = fetch0;
+			ld3					: 	#16 Present_state = ld4;
+			ld4					: 	#16 Present_state = ld5;
+			ld5					: 	#16 Present_state = ld6;
+			ld6					: 	#16 Present_state = ld7;
+			ld7					:  #16 Present_state = fetch0;
 			
-			ldi3				: 	Present_state = ldi4;
-			ldi4				: 	Present_state = ldi5;
-			ldi5 				:	Present_state = fetch0;
+			ldi3				: 	#16 Present_state = ldi4;
+			ldi4				: 	#16 Present_state = ldi5;
+			ldi5 				:	#16 Present_state = fetch0;
 			
 			st3					: 	Present_state = st4;
 			st4					: 	Present_state = st5;

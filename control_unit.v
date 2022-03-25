@@ -4,7 +4,7 @@ module control_unit(
 	output reg		PCout, ZHighout, ZLowout, MDRout, MAR_enable, PC_enable, MDR_enable, IR_enable, Y_enable, IncPC, MDR_read, 
 					HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write, Gra, Grb, Grc, R_enable, Rout, BAout, CON_enable,
 					enableInputPort, OutPort_enable, InPortout, Run,
-	output reg		[15:0] Reg_enableIn,
+	output reg	[15:0] Reg_enableIn,
 	input			[31:0] IR,
 	input			Clock, Reset, Stop
 );
@@ -22,19 +22,20 @@ parameter Reset_state= 8'b00000000, fetch0 = 8'b00000001, fetch1 = 8'b00000010, 
 			 andi3 = 8'b00111010, andi4 = 8'b00111011, andi5 = 8'b00111100, ori3 = 8'b00111101, ori4 = 8'b00111110, ori5 = 8'b00111111,
 			 br3 = 8'b01000000, br4 = 8'b01000001, br5 = 8'b01000010, br6 = 8'b01000011, br7 = 8'b11111111, jr3 = 8'b01000100, jal3 = 8'b01000101, 
 			 jal4 = 8'b01000110, mfhi3 = 8'b01000111, mflo3 = 8'b01001000, in3 = 8'b01001001, out3 = 8'b01001010, nop3 = 8'b01001011, 
-			 halt3 = 8'b01001100;
+			 halt3 = 8'b01001100, fetch2a = 8'b10000000;
 
 reg		[7:0] Present_state = Reset_state;
 
-always @(posedge Clock, posedge Reset, posedge Stop)
+always @(posedge Clock)
 	begin
 		if (Reset == 1'b1) Present_state = Reset_state;
 		if (Stop == 1'b1) Present_state = halt3;
 		else case (Present_state)
-			Reset_state		: Present_state = fetch0;
-			fetch0			:  #16 Present_state = fetch1;
-			fetch1			:	#24 Present_state = fetch2;
-			fetch2			:	#16 begin	
+			Reset_state		:  Present_state = fetch0;
+			fetch0			:  Present_state = fetch1;
+			fetch1			:	Present_state = fetch2;
+			fetch2			:	Present_state = fetch2a;
+			fetch2a			:	begin	
 										case	(IR[31:27])
 											5'b00011		:		Present_state=add3;	
 											5'b00100		: 		Present_state=sub3;
@@ -65,9 +66,9 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 											5'b11010		:		Present_state=halt3;
 										endcase
 									end
-			add3				: 	#16 Present_state = add4;
-			add4				:	#16 Present_state = add5;
-			add5 				:	#16 Present_state = fetch0;
+			add3				: 	Present_state = add4;
+			add4				:	Present_state = add5;
+			add5 				:	Present_state = fetch0;
 			
 			addi3				: 	Present_state = addi4;
 			addi4				:	Present_state = addi5;
@@ -117,15 +118,15 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			not3				: 	Present_state = not4;
 			not4				: 	Present_state = fetch0;
 			
-			ld3					: 	#16 Present_state = ld4;
-			ld4					: 	#16 Present_state = ld5;
-			ld5					: 	#16 Present_state = ld6;
-			ld6					: 	#16 Present_state = ld7;
-			ld7					:  #16 Present_state = fetch0;
+			ld3					: 	Present_state = ld4;
+			ld4					: 	Present_state = ld5;
+			ld5					: 	Present_state = ld6;
+			ld6					: 	Present_state = ld7;
+			ld7					:  Present_state = fetch0;
 			
-			ldi3				: 	#16 Present_state = ldi4;
-			ldi4				: 	#16 Present_state = ldi5;
-			ldi5 				:	#16 Present_state = fetch0;
+			ldi3				: 	Present_state = ldi4;
+			ldi4				: 	Present_state = ldi5;
+			ldi5 				:	Present_state = fetch0;
 			
 			st3					: 	Present_state = st4;
 			st4					: 	Present_state = st5;
@@ -184,12 +185,15 @@ begin
 		end 
 		fetch1: begin
 			PCout <= 0; MAR_enable <= 0; //IncPC <= 0;
-			MDR_enable <= 1; MDR_read <= 1; //ZLowout <= 1; 
+			MDR_enable <= 1; MDR_read <= 1; //ZLowout <= 1
 			IncPC <= 1; PC_enable <= 1;
 		end 
 		fetch2: begin
-			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0;
-			MDRout <= 1; IR_enable <= 1; 	
+			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0; IncPC <= 0;
+			MDRout <= 1; IR_enable <= 1;
+		end 
+		fetch2a: begin
+			
 		end 
 		//*********************************************** <-- Good 2 Go
 				
@@ -218,7 +222,7 @@ begin
 		or5, and5, shl5, shr5, rol5, ror5: begin
 			Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
+			#64 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
@@ -266,7 +270,7 @@ begin
 		andi5: begin
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
+			#64 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
 		
 		//*********************************************** <--- 2x check addi4
@@ -284,7 +288,7 @@ begin
 		
 			Cout<=0; ZHighIn <= 0; ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
+			#64 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
@@ -302,7 +306,7 @@ begin
 		
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1; R_enable<=0;//Rout<=1;
+			#64 ZLowout <= 0;Gra<=1; R_enable<=0;//Rout<=1;
 		end
 		
 		//*********************************************** <-- 2x check ZHighIn in ld4
@@ -328,6 +332,7 @@ begin
 		ld7: begin
 			MDR_read <= 0; MDR_enable <= 0;
 			MDRout <= 1; Gra <= 1; R_enable <= 1;
+			#64 ZLowout <= 0; Gra<=0; R_enable<=0; 
 		end
 		
 		//*********************************************** <-- Good 2 Go
@@ -344,7 +349,7 @@ begin
 		ldi5: begin
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=0;R_enable<=0; 
+			#64 ZLowout <= 0; Gra<=0; R_enable<=0; 
 		end
 		
 		//*********************************************** <-- Good 2 Go
@@ -377,7 +382,7 @@ begin
 		jr3: begin
 			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;				
 			Gra<=1;Rout<=1; PC_enable <= 1;
-			#40 PC_enable <= 0;
+			#64 PC_enable <= 0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
@@ -395,14 +400,14 @@ begin
 		mfhi3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; HIout<=1;
-			#40 Gra<=0;R_enable<=0; HIout<=0;
+			#64 Gra<=0;R_enable<=0; HIout<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
 		mflo3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; LOout<=1;
-			#40 Gra<=0;R_enable<=0; LOout<=0;
+			#64 Gra<=0;R_enable<=0; LOout<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go

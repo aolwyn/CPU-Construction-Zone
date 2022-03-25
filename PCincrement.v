@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 10ps
 
 module PCincrement #(parameter qInitial = 0)(
     input clk, clr, IncPC,

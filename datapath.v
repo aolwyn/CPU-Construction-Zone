@@ -3,7 +3,7 @@ module datapath(
 	//output [31:0] BusMuxOut,
 	output [31:0] OutPort_output,
 	input [31:0] inPort_input,
-	input clk, rst, stop
+	input rst, stop, RAM_Clock
 );
 	
 	reg  [15:0] enableReg;					//chooses the register to enable
@@ -12,7 +12,7 @@ module datapath(
 	wire RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read, GRA, GRB, GRC;
 	wire HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort, enable_inPort;
 	wire InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, Baout, Cout, IncPC;
-	wire R_in, R_out, Cin, CONin, run, clr;
+	wire R_in, R_out, Cin, CONin, run, clr, clk;
 	
 	wire [15:0] enableReg_IR, enableReg_CPU, Rout_IR;
 
@@ -24,6 +24,7 @@ module datapath(
 		//sets register enable and out signals based on provided info from CPU or IR
 		always@(*)begin			
 			if (enableReg_IR) enableReg <= enableReg_IR; 
+			else enableReg <= 16'b0;
 			//else enableReg <= enableReg_CPU;
 
 			if (Rout_IR) Rout <= Rout_IR; 
@@ -36,13 +37,15 @@ module datapath(
 	wire [4:0] operation;
 	wire branch_flag;
 
+	clkDivider clkDiv (.RAM_Clock(RAM_Clock), .slwClock(clk));
+	
 	//registers 0-15
 	wire [31:0] r0_out;
 	Reg32 r0(clr,clk,enableReg[0],BusMuxOut,r0_out);
 	assign BusMuxIn_R0 = {32{!Baout}} & r0_out;
 
-	Reg32 #(20) r1(clr,clk,enableReg[1],BusMuxOut,BusMuxIn_R1);
-	Reg32 #(8) r2(clr,clk,enableReg[2],BusMuxOut,BusMuxIn_R2);
+	Reg32 r1(clr,clk,enableReg[1],BusMuxOut,BusMuxIn_R1);
+	Reg32 r2(clr,clk,enableReg[2],BusMuxOut,BusMuxIn_R2);
 	Reg32 r3(clr,clk,enableReg[3],BusMuxOut,BusMuxIn_R3);
 	Reg32 r4(clr,clk,enableReg[4],BusMuxOut,BusMuxIn_R4);
 	Reg32 r5(clr,clk,enableReg[5],BusMuxOut,BusMuxIn_R5);
@@ -80,7 +83,7 @@ module datapath(
 	
 	//memoryRam stuff
 	//memoryRam RAM (.a(BusMuxIn_MAR[8:0]), .clk(clk), .d(BusMuxIn_MDR), .we(RAM_wr_enable), .q(RAM_out));
-	RAM ram(.address(BusMuxIn_MAR[8:0]), .clock(clk), .data(BusMuxIn_MDR), .rden(Read), .wren(RAM_wr_enable), .q(RAM_out));
+	RAM ram(.address(BusMuxIn_MAR[8:0]), .clock(RAM_Clock), .data(BusMuxIn_MDR), .rden(Read), .wren(RAM_wr_enable), .q(RAM_out));
 	wire [4:0] encoderOut;
 	//********inputs may be in wrong order
 	encoder_32_5 regEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, encoderOut);

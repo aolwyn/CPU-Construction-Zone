@@ -1,13 +1,14 @@
 `timescale 1ns/10ps
 
 module alu(
-	input brn_flag,
+	input brn_flag, IncPC,
 	input wire [31:0] RA,
 	input wire [31:0] RB,
-
+	input wire [31:0] RPC,
 	input wire [4:0] opcode,
 	
-	output reg [63:0] RC 
+	output reg [63:0] RC, 
+	output wire [31:0] aluPC
 );
 
 parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110, Division = 5'b01111, Shift_right = 5'b00101, Shift_left = 5'b00110, Rotate_right = 5'b00111, Rotate_left = 5'b01000, 
@@ -50,15 +51,6 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 					RC[31:0] <= not_out[31:0];
 					RC[63:32] <= 32'd0;
 				end
-
-				Multiplication: begin
-					RC[63:32] <= ~mul_out[63:32];
-					RC[31:0] <= mul_out[31:0];
-				end
-				
-				Division: begin
-					RC[63:0] <= div_out[63:0];
-				end
 				
 				Shift_right: begin
 					RC[31:0] <= shr_out[31:0];
@@ -78,6 +70,15 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 				Rotate_left: begin
 					RC[31:0] <= rol_out[31:0];
 					RC[63:32] <= 32'd0;
+				end
+				
+				Multiplication: begin
+					RC[63:32] <= ~mul_out[63:32];
+					RC[31:0] <= mul_out[31:0];
+				end
+				
+				Division: begin
+					RC[63:0] <= div_out[63:0];
 				end
 				
 				ldw, ldwi, stw, addi: begin
@@ -124,5 +125,6 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	shift_R shr(RA,shr_out);
 	negate neg(RA,neg_out);
 	divide_32 div(RA,RB, div_out);
+	PCincrement incPC(IncPC, RPC, aluPC);
 
 endmodule

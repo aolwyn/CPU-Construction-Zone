@@ -22,7 +22,7 @@ parameter Reset_state= 8'b00000000, fetch0 = 8'b00000001, fetch1 = 8'b00000010, 
 			 andi3 = 8'b00111010, andi4 = 8'b00111011, andi5 = 8'b00111100, ori3 = 8'b00111101, ori4 = 8'b00111110, ori5 = 8'b00111111,
 			 br3 = 8'b01000000, br4 = 8'b01000001, br5 = 8'b01000010, br6 = 8'b01000011, br7 = 8'b11111111, jr3 = 8'b01000100, jal3 = 8'b01000101, 
 			 jal4 = 8'b01000110, mfhi3 = 8'b01000111, mflo3 = 8'b01001000, in3 = 8'b01001001, out3 = 8'b01001010, nop3 = 8'b01001011, 
-			 halt3 = 8'b01001100, fetch2a = 8'b10000000;
+			 halt3 = 8'b01001100, fetch2a = 8'b10000000, fetch3 = 8'b11000000; 
 
 reg		[7:0] Present_state = Reset_state;
 
@@ -35,7 +35,8 @@ always @(posedge Clock)
 			fetch0			:  Present_state = fetch1;
 			fetch1			:	Present_state = fetch2;
 			fetch2			:	Present_state = fetch2a;
-			fetch2a			:	begin	
+			fetch2a			:	Present_state = fetch3;
+			fetch3			:	begin	
 										case	(IR[31:27])
 											5'b00011		:		Present_state=add3;	
 											5'b00100		: 		Present_state=sub3;
@@ -68,100 +69,100 @@ always @(posedge Clock)
 									end
 			add3				: 	Present_state = add4;
 			add4				:	Present_state = add5;
-			add5 				:	Present_state = fetch0;
+			add5 				:	Present_state = Reset_state;
 			
 			addi3				: 	Present_state = addi4;
 			addi4				:	Present_state = addi5;
-			addi5 				:	Present_state = fetch0;
+			addi5 				:	Present_state = Reset_state;
 			
 			sub3				: 	Present_state = sub4;
 			sub4				: 	Present_state = sub5;
-			sub5				:	Present_state = fetch0;
+			sub5				:	Present_state = Reset_state;
 			
 			mul3				: 	Present_state = mul4;
 			mul4				: 	Present_state = mul5;
 			mul5				: 	Present_state = mul6;
-			mul6				:	Present_state = fetch0; 
+			mul6				:	Present_state = Reset_state; 
 			
 			div3				: 	Present_state = div4;
 			div4				: 	Present_state = div5;
 			div5				: 	Present_state = div6;
-			div6				:	Present_state = fetch0;
+			div6				:	Present_state = Reset_state;
 			
 			or3				: 	Present_state = or4;
 			or4				: 	Present_state = or5;
-			or5				:	Present_state = fetch0;
+			or5				:	Present_state = Reset_state;
 			
 			and3				: 	Present_state = and4;
 			and4				: 	Present_state = and5;
-			and5   				:	Present_state = fetch0;
+			and5   				:	Present_state = Reset_state;
 			
 			shl3				: 	Present_state = shl4;
 			shl4				: 	Present_state = shl5;
-			shl5 				:	Present_state = fetch0;
+			shl5 				:	Present_state = Reset_state;
 			
 			shr3				: 	Present_state = shr4;
 			shr4				: 	Present_state = shr5;
-			shr5 				:	Present_state = fetch0;
+			shr5 				:	Present_state = Reset_state;
 			
 			rol3				: 	Present_state = rol4;
 			rol4				: 	Present_state = rol5;
-			rol5 				:	Present_state = fetch0;
+			rol5 				:	Present_state = Reset_state;
 			
 			ror3				: 	Present_state = ror4;
 			ror4				: 	Present_state = ror5;
-			ror5 				:	Present_state = fetch0;
+			ror5 				:	Present_state = Reset_state;
 			
 			neg3				: 	Present_state = neg4;
-			neg4				: 	Present_state = fetch0;
+			neg4				: 	Present_state = Reset_state;
 			
 			not3				: 	Present_state = not4;
-			not4				: 	Present_state = fetch0;
+			not4				: 	Present_state = Reset_state;
 			
 			ld3					: 	Present_state = ld4;
 			ld4					: 	Present_state = ld5;
 			ld5					: 	Present_state = ld6;
 			ld6					: 	Present_state = ld7;
-			ld7					:  Present_state = fetch0;
+			ld7					:  Present_state = Reset_state;
 			
 			ldi3				: 	Present_state = ldi4;
 			ldi4				: 	Present_state = ldi5;
-			ldi5 				:	Present_state = fetch0;
+			ldi5 				:	Present_state = Reset_state;
 			
 			st3					: 	Present_state = st4;
 			st4					: 	Present_state = st5;
 			st5					: 	Present_state = st6;
 			st6					: 	Present_state = st7;
-			st7 				:	Present_state = fetch0;
+			st7 				:	Present_state = Reset_state;
 			
 			andi3				: 	Present_state = andi4;
 			andi4				: 	Present_state = andi5;
-			andi5 				:	Present_state = fetch0;
+			andi5 				:	Present_state = Reset_state;
 			
 			ori3				: 	Present_state = ori4;
 			ori4				: 	Present_state = ori5;
-			ori5 				:	Present_state = fetch0;
+			ori5 				:	Present_state = Reset_state;
 			
 			jal3				: 	Present_state = jal4;
-			jal4 				:	Present_state = fetch0;
+			jal4 				:	Present_state = Reset_state;
 			
-			jr3 				:	Present_state = fetch0;
+			jr3 				:	Present_state = Reset_state;
 			
 			br3					: 	Present_state = br4;
 			br4					: 	Present_state = br5;
 			br5					: 	Present_state = br6;
 			br6  				:	Present_state = br7;
-			br7  				:	Present_state = fetch0;
+			br7  				:	Present_state = Reset_state;
 			
-			out3 				:	Present_state = fetch0;
+			out3 				:	Present_state = Reset_state;
 			
-			in3 				:	Present_state = fetch0;
+			in3 				:	Present_state = Reset_state;
 			
-			mflo3 				:	Present_state = fetch0;
+			mflo3 				:	Present_state = Reset_state;
 			
-			mfhi3 				:	Present_state = fetch0;
+			mfhi3 				:	Present_state = Reset_state;
 			
-			nop3 				:	Present_state = fetch0;
+			nop3 				:	Present_state = Reset_state;
 			
 			endcase
 	end
@@ -177,28 +178,31 @@ begin
 			Gra <= 0; Grb <= 0; Grc <= 0; Y_enable <= 0;	
 			PCout<= 0; ZHighout<=0; ZLowout<=0; MDRout<=0; MAR_enable<=0; PC_enable<=0; MDR_enable<=0; IR_enable<=0; Y_enable<=0; IncPC<=0; MDR_read<=0;
 			HIin<=0; LOin<=0; HIout<=0; LOout<=0; ZHighIn<=0; ZLowIn<=0; Cout<=0; RAM_write<=0; 
-			Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0;
+			Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0; R_enable<=0;
 		end
 		fetch0: begin
 			MDRout <= 0; 
 			PCout <= 1; MAR_enable <= 1; 
 		end 
 		fetch1: begin
-			PCout <= 0; MAR_enable <= 0; //IncPC <= 0;
-			MDR_enable <= 1; MDR_read <= 1; //ZLowout <= 1
-			IncPC <= 1; PC_enable <= 1;
+			PCout <= 0; MAR_enable <= 0;
+			MDR_enable <= 1; MDR_read <= 1; //ZLowout <= 1;
 		end 
 		fetch2: begin
-			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; PC_enable <= 0; IncPC <= 0;
+			MDR_enable <= 0; MDR_read <= 0; ZLowout <= 0; 
 			MDRout <= 1; IR_enable <= 1;
 		end 
 		fetch2a: begin
 			
 		end 
+		fetch3: begin
+			MDRout <= 0; IR_enable <= 0;
+			IncPC <= 1; PC_enable <= 1;
+		end
 		//*********************************************** <-- Good 2 Go
 				
 		add3, sub3: begin	
-			MDRout <= 0; IR_enable <= 0; PC_enable <= 0; IncPC <= 0;
+			PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1; Y_enable <= 1;
 		end
 		add4, sub4: begin
@@ -207,12 +211,12 @@ begin
 		end
 		add5, sub5: begin
 				Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
-				ZLowout <= 1;Gra<=1;R_enable<=1;
+				ZLowout <= 1; Gra<=1; R_enable<=1;
 		end
 		
 		//*********************************************** <-- Double check the after 40 sec thing
 		or3, and3, shl3, shr3, rol3, ror3: begin	
-			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
+			PC_enable <= 0; IncPC <= 0;
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 		or4, and4, shl4, shr4, rol4, ror4: begin
@@ -227,7 +231,7 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		mul3, div3: begin	
-			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
+			PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1;Y_enable <= 1;  
 			
 		end
@@ -248,17 +252,17 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		not3, neg3: begin	
-			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
+			PC_enable <= 0; IncPC <= 0;
 			Grb<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
 		end
 		not4, neg4: begin
 			Grb<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
-			ZLowout <= 1;Gra<=1;R_enable<=1;
+			ZLowout <= 1; Gra<=1; R_enable<=1;
 		end
 
 		//*********************************************** <-- should be good, unsure about ZHighIn<= 1 in Andi 4
 		andi3: begin
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 
@@ -275,17 +279,15 @@ begin
 		
 		//*********************************************** <--- 2x check addi4
 		addi3: begin
-			MDRout <= 0; IR_enable <= 0; PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Grb<=1; Rout<=1; Y_enable<=1;
 		end
-
 		addi4: begin
 			Grb<=0;Rout<=0;Y_enable<=0;
 			Cout<=1; ZLowIn <= 1; //ZHighIn <= 1;
 		end
 
 		addi5: begin
-		
 			Cout<=0; ZHighIn <= 0; ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#64 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
@@ -293,7 +295,7 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		ori3: begin
-			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
+			PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 
@@ -311,7 +313,7 @@ begin
 		
 		//*********************************************** <-- 2x check ZHighIn in ld4
 		ld3: begin
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -337,7 +339,7 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		ldi3: begin
-			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;			
+			PC_enable <= 0; IncPC <= 0;			
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -354,7 +356,7 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		st3: begin
-			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
+			PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -380,14 +382,14 @@ begin
 		
 		//*********************************************** <-- Good 2 Go 
 		jr3: begin
-			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;				
+			PC_enable <= 0; IncPC <= 0;				
 			Gra<=1;Rout<=1; PC_enable <= 1;
 			#64 PC_enable <= 0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
 		jal3: begin
-			MDRout <= 0; IR_enable <= 0; PC_enable <= 0;IncPC <= 0;	
+			PC_enable <= 0;IncPC <= 0;	
 			PCout <= 1; Reg_enableIn <= 16'h4000; Grb <= 1; //added Grb <= 1; , unsure of reg enable in
 		end
 
@@ -398,34 +400,33 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		mfhi3: begin
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; HIout<=1;
 			#64 Gra<=0;R_enable<=0; HIout<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
 		mflo3: begin
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; LOout<=1;
 			#64 Gra<=0;R_enable<=0; LOout<=0;
 		end
 		
 		//*********************************************** <-- Good 2 Go
 		in3: begin 
-			MDRout <= 0; IR_enable <= 0;			PC_enable <= 0; IncPC <= 0;
+			PC_enable <= 0; IncPC <= 0;
 			Gra<=1;  InPortout <= 1; R_enable<=1;
 		end
 		
 		//*********************************************** <-- Unsure about Y_Enable 
 		out3: begin //Gra <= 1; R_out <= 1; OutPort_enable <= 1; from testbench 
-		
-			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
+			PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;Rout<=1;Y_enable<=1; OutPort_enable <= 1;
 		end
 		
 		//*********************************************** <-- Good 2 Go
 		br3: begin
-			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
+			PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;Rout<=1; CON_enable<=1;
 		end
 
@@ -450,6 +451,7 @@ begin
 		
 		//*********************************************** <-- Good 2 Go
 		nop3: begin
+			PC_enable <= 0; IncPC <= 0;		
 		end
 		
 		//*********************************************** <-- should be Good 2 Go, maybe add a #40?

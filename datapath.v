@@ -6,8 +6,8 @@ module datapath(
 	input rst, stop, RAM_Clock
 );
 	
-	reg  [15:0] enableReg;					//chooses the register to enable
-	reg  [15:0] Rout;						//chooses which register to read from
+	reg  [15:0] enableReg;			//chooses the register to enable
+	reg  [15:0] Rout;					//chooses which register to read from
 
 	wire RAM_wr_enable, MDRin, MDRout, MARin,  IRin, Read, GRA, GRB, GRC;
 	wire HIin, LOin, ZHIin, ZLOin, Yin, PCin, enable_outPort, enable_inPort;
@@ -33,7 +33,7 @@ module datapath(
 	//make wires for reg outputs
 	wire [31:0] BusMuxIn_IR, BusMuxIn_Y, C_sign_extend, BusMuxIn_InPort,BusMuxIn_MDR,BusMuxIn_PC,BusMuxIn_ZLO, BusMuxIn_ZHI, BusMuxIn_LO, BusMuxIn_HI;
 	wire [31:0] BusMuxIn_R15, BusMuxIn_R14, BusMuxIn_R13, BusMuxIn_R12, BusMuxIn_R11, BusMuxIn_R10, BusMuxIn_R9, BusMuxIn_R8, BusMuxIn_R7, BusMuxIn_R6, BusMuxIn_R5, BusMuxIn_R4, BusMuxIn_R3, BusMuxIn_R2, BusMuxIn_R1, BusMuxIn_R0;
-	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAM_out, BusMuxOut, incOut;
+	wire [31:0] bus_signal, C_data_out, BusMuxIn_MAR, outPort_output, con_out, RAM_out, BusMuxOut, aluPC;
 	wire [4:0] operation;
 	wire branch_flag;
 
@@ -58,8 +58,7 @@ module datapath(
 	Reg32 r12(clr,clk,enableReg[12],BusMuxOut,BusMuxIn_R12);
 	Reg32 r13(clr,clk,enableReg[13],BusMuxOut,BusMuxIn_R13);
 	Reg32 r14(clr,clk,enableReg[14],BusMuxOut,BusMuxIn_R14);
-	Reg32 PC(clr,clk,PCin,incOut,BusMuxIn_PC);
-	PCincrement incPC(clk, clr, IncPC, BusMuxIn_PC, incOut);
+	Reg32 PC(clr,clk,PCin,aluPC,BusMuxIn_PC);
 	Reg32 Y(clr,clk,Yin,BusMuxOut,BusMuxIn_Y);
 	Reg32 Z_HI(clr,clk,ZHIin,C_data_out,BusMuxIn_ZHI);
 	Reg32 Z_LO(clr,clk,ZLOin,C_data_out,BusMuxIn_ZLO);
@@ -121,9 +120,12 @@ module datapath(
 	alu the_alu(
 		.RA(BusMuxIn_Y),
 		.RB(BusMuxOut),
+		.RPC(BusMuxIn_PC),
 		.opcode(operation),
 		.brn_flag(branch_flag),	
-		.RC(C_data_out)                              
+		.IncPC(IncPC),
+		.RC(C_data_out),
+		.aluPC(aluPC)
 	);			
 
 	//instantiate the control unit here
@@ -167,18 +169,3 @@ module datapath(
 	);
 
 endmodule
-
-
-/*  //Final inputs for datapath 
-	input clk, clr, stop,
-	//input wire[31:0] InPort_input,	//for later
-	//output wire[31:0] OutPort_output,		//for later
-	output [31:0] BusMuxOut,
-	output [4:0] operation
-*/
-	/*	//commented out for early testing
-	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
-			HIin, LOin, HIout, LOout, ZHIin, ZLOin, Cout, RAM_write_en, GRA, GRB, GRC, 
-			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
-	*/
-

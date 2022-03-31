@@ -207,7 +207,8 @@ begin
 		end
 		add4, sub4: begin
 				Grb <= 0; Rout <= 0; Y_enable <= 0;
-				Grc<=1; Rout <= 1; ZHighIn <= 1;  ZLowIn <= 1; 
+				Grc<=1; Rout <= 1; 
+				ZHighIn <= 1; ZLowIn <= 1; 
 		end
 		add5, sub5: begin
 				Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
@@ -437,12 +438,12 @@ begin
 
 		br5: begin
 			PCout<=0; Y_enable <= 0;
-			   	Cout <= 1; ZHighIn <= 1; ZLowIn <= 1;
+		Cout <= 1; ZHighIn <= 1; ZLowIn <= 1; PC_enable <= 1;
 		end
 
 		br6: begin
 			Cout <= 0; ZHighIn <= 0; ZLowIn <= 0;
-			   	ZLowout<=1; PC_enable<=1;
+			   	ZLowout<=1; PC_enable<=0;
 		end
 		br7: begin
 			ZLowout<=0; PC_enable<=0;

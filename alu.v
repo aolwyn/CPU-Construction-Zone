@@ -8,7 +8,7 @@ module alu(
 	input wire [4:0] opcode,
 	
 	output reg [63:0] RC, 
-	output wire [31:0] aluPC
+	output reg [31:0] aluPC
 );
 
 parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110, Division = 5'b01111, Shift_right = 5'b00101, Shift_left = 5'b00110, Rotate_right = 5'b00111, Rotate_left = 5'b01000, 
@@ -16,99 +16,114 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 				  branch = 5'b10010, jr = 5'b10011, jal = 5'b10100, mfhi = 5'b10111, mflo = 5'b11000, in = 5'b10101, out = 5'b10110, nop = 5'b11001, halt = 5'b11010;
 	
 	wire [31:0] shr_out, shl_out, lor_out, land_out, neg_out, not_out, adder_sum, adder_cout, sub_diff, sub_cout, rol_out, ror_out;
-	wire [63:0] mul_out, div_out;
+	wire [63:0] mul_out, div_out, PC_out;
 	
 	always @(*)
 		begin
 			case (opcode)
-				
 				Addition: begin
 					RC[31:0] <= adder_sum[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
-				
 				Subtraction: begin
-					RC[31:0] <= sub_diff[31:0];	
+					RC[31:0] <=  sub_diff[31:0];	//RA[31:0] - RB[31:0];//
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Logical_OR, ori: begin
 					RC[31:0] <= lor_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Logical_AND, andi: begin
 					RC[31:0] <= land_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Negate: begin
 					RC[31:0] <= neg_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Not: begin
 					RC[31:0] <= not_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Shift_right: begin
 					RC[31:0] <= shr_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Shift_left: begin
 					RC[31:0] <= shl_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Rotate_right: begin
 					RC[31:0] <= ror_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Rotate_left: begin
 					RC[31:0] <= rol_out[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				Multiplication: begin
 					RC[63:32] <= ~mul_out[63:32];
 					RC[31:0] <= mul_out[31:0];
+					aluPC <= PC_out;
 				end
 				
 				Division: begin
 					RC[63:0] <= div_out[63:0];
+					aluPC <= PC_out;
 				end
 				
 				ldw, ldwi, stw, addi: begin
 					RC[31:0] <= adder_sum[31:0];
 					RC[63:32] <= 32'd0;
+					aluPC <= PC_out;
 				end
 				
 				branch: begin
 					if(brn_flag==1) begin
-						RC[31:0] <= adder_sum[31:0];
-						RC[63:32] <= 32'd0;
+						aluPC <= adder_sum[31:0];
+						RC <= 64'd0;
 					end 
-					else begin
-						RC[31:0] <= RA[31:0];
-						RC[63:32] <= 32'd0;
-					end
+					else
+						aluPC <= PC_out;
 				end
-				
+				jr: begin
+					aluPC <= adder_sum[31:0];
+				end
+				jal: begin
+					RC[31:0] <= RPC[31:0] + 1;
+					aluPC <= adder_sum[31:0];
+				end
 				halt: begin
-					
+					aluPC <= PC_out;
 				end
 				
 				nop: begin
-					
+					aluPC <= PC_out;
 				end
 				
 				default: begin
 					RC[63:0] <= 64'd0;
+					aluPC <= PC_out;
 				end
-
 			endcase
 	end
 	
@@ -125,6 +140,6 @@ parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110
 	shift_R shr(RA,shr_out);
 	negate neg(RA,neg_out);
 	divide_32 div(RA,RB, div_out);
-	PCincrement incPC(IncPC, RPC, aluPC);
+	PCincrement incPC(IncPC, RPC, PC_out);
 
 endmodule
